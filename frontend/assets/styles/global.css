@@ -1,0 +1,17 @@
+/*
+    Эти стили будут подключаться на всех страницах.
+    Тут должны быть только базовые стили. Если нужно описать стили Vue компонента, то делаем это внутри .vue файла
+*/
+
+/* Сначала выводятся все слои tailwind, потом уже другое */
+@import "./tailwind.css";
+
+/* Секция для общих стилей и настроек */
+@import "./settings.css";
+@import "./fonts.css";
+@import "./reset.css";
+@import "./layout.css";
+@import './typography.css';
+
+/* Секция для компонентов */
+@import "./components/container.css";

@@ -1,0 +1,19 @@
+admin:
+    resource: '@CreonitAdminBundle/Controller/'
+    type: annotation
+    prefix: /admin
+
+api.docs:
+    resource: "@CreonitRestBundle/Controller/"
+    type:     annotation
+    prefix:   /openapi
+
+api:
+    resource: '../src/Controller/Api/'
+    type: annotation
+    prefix: /api
+    defaults: {_api: true}
+
+nuxt:
+    resource: .
+    type: nuxt

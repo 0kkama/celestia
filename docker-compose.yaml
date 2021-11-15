@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+    varnish:
+        image: varnish:stable
+        volumes:
+            - ./app/docker/varnish/default.vcl:/etc/varnish/default.vcl:ro
+
+    nginx:
+        image: nginx:1.19
+        volumes:
+            - ./app/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./backend/public:/app/public:cached
+            - ./frontend/.nuxt:/app/.nuxt:cached
+            - ./frontend/static:/app/static:cached
+
+    backend:
+        build: app/docker/php
+        volumes:
+            - ./backend:/app:cached
+            - ./frontend/.nuxt:/app/var/nuxt:cached
+            - ./app/docker/php/php.ini:/usr/local/etc/php/php.ini:cached
+            - ./app/docker/php/php-fpm.conf:/usr/local/etc/php-fpm.d/zz.conf:cached
+        user: ${DOCKER_USER}
+        working_dir: /app
+        env_file:
+          - .env.dist
+          - .env
+
+    frontend:
+        build: app/docker/nuxt
+        user: ${DOCKER_USER}
+        volumes:
+            - ./frontend:/app:cached
+        env_file:
+            - .env.dist
+            - .env
+
+    imgproxy:
+        image: darthsim/imgproxy:latest
+        volumes:
+            - ./backend/public/uploads:/app/uploads:cached
+            - ./backend/public/cache:/app/cache:cached
+        environment:
+            - "IMGPROXY_LOCAL_FILESYSTEM_ROOT=/app"
+            - "IMGPROXY_QUALITY=100"
+            - "IMGPROXY_TTL=31536000"
+            - "IMGPROXY_ENABLE_WEBP_DETECTION=1"
+            - "IMGPROXY_ENFORCE_WEBP=1"

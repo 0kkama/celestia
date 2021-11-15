@@ -1,0 +1,201 @@
+config:
+    required: true
+
+database:
+    +:
+        name: default
+        package: src.Model
+        namespace: App\Model
+        defaultIdMethod: native
+        identifierQuoting: true
+
+    +vendor:
+        type: mysql
+        parameters:
+            Engine: InnoDB
+            Charset: utf8
+
+    +behavior:
+        - auto_add_pk
+
+#    content_block:
+#        data: longvarchar
+
+# user tables =======
+    user:
+        type: tinyint
+        first_name: text
+        last_name: text
+        middle_name: text
+        email: varchar(255)
+        phone: varchar(255)
+        password: varchar(255)
+        salt: varchar(255)
+        +behavior:
+            - timestampable
+
+    user_access_token:
+        user_id: int > user.id
+        token: varchar(64) key
+        refresh_token: varchar(64) key
+        expired_at:
+            - datetime
+        +behavior:
+            - timestampable
+
+    user_group:
+        title: varchar(255)
+        name: varchar(50) key(10)
+        roles: array
+
+    user_group_rel:
+        user_id: int > user.id
+        user_group_id: int > user_group.id
+# =======
+
+# page and content tables ======
+    content:
+        text: longtext
+        completed: bool
+        +behavior:
+            - timestampable
+
+    page_site:
+        title: text
+        host: text
+        +behavior:
+            - sortable
+            - timestampable
+
+    content_block:
+        data: text
+        type: varchar(20)
+        size: tinyint(4)
+        visible: bool
+        +behavior:
+            - tree
+            - sortable
+
+    page:
+        link_id: int
+        page_site_id: int > page_site.id
+        type: tinyint(4)
+        slug: text
+        url: text
+        title: text
+        menu_title: text
+        name: text
+        host: text
+        meta_title: text
+        meat_description: text
+        meta_keywords: text
+        visible: bool
+        hide: bool
+        +behavior:
+            - tree
+            - content
+            - sortable
+            - timestampable
+
+    holder:
+        complete: bool
+        page_id: int > page.id
+
+# =======
+
+# files tables =======
+    file:
+        path: text
+        name: text
+        original_name: text
+        extension: varchar(10)
+        mime: varchar(100)
+        size: int
+        +behavior:
+            - timestampable
+
+    gallery:
+        +behavior:
+            - timestampable
+
+    video:
+        source: text
+        +behavior:
+            - file
+            - timestampable
+
+    image:
+        source: text
+        +behavior:
+            - file
+            - timestampable
+
+    gallery_item:
+        gallery_id: int > gallery.id
+        title: text
+        description: text
+        cover: bool
+        visible: bool
+        +behavior:
+            - sortable
+            - timestampable
+            - file
+            - image
+            - video
+# =======
+
+# storage data tables ======
+    storage_data_entry:
+        item_name: text
+        locale: varchar(10)
+        context: text
+        visible: bool
+        +behavior:
+            - sortable
+            - timestampable
+
+    storage_data_field:
+        storage_data_entry_id: int > storage_data_entry.id
+        field_name: text
+        locale: varchar(10)
+        value: text
+        +behavior:
+            - timestampable
+# =======
+
+# product category brand tables=======
+    brand:
+        name: text
+        image: text
+
+    product:
+        brand_id: int > brand.id
+        price: double(9,2)
+        rating: tinyint(5)
+        article: text
+        name: text
+        slug: text
+        main_image: text
+        content: text
+        description: text
+        properties: text
+        images_list: text
+        +behavior:
+            - timestampable
+            - sortable
+
+    product_category:
+        name: text
+        image: text
+        content: text
+        products_nb: int
+
+    product_category_rel:
+        product_id: int > product.it
+        category_id: int > product_category.id
+
+    rating:
+        product_id: int > product.id
+        user_id: int > user_id
+        rate: tinyint(5)
+# =======

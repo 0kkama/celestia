@@ -1,0 +1,44 @@
+.is-layer-locked {
+    @apply fixed top-0 bottom-0 w-full pointer-events-none;
+}
+
+.layer-blackout {
+    @apply fixed top-0 left-0 right-0 bottom-0 transition-opacity duration-300 ease-out;
+    transform-style: preserve-3d;
+    background-color: rgba(0, 0, 0, .75);
+}
+.layer-blackout_hidden {
+    @apply opacity-0 pointer-events-none;
+}
+
+.layer {
+    @apply flex items-center justify-center absolute top-0 left-0 right-0 min-h-full pointer-events-none;
+}
+
+.layer-blackout,
+.layer {
+    z-index: 100;
+}
+
+.layer_back {
+    @apply fixed;
+    @apply transition-none animate-none invisible pointer-events-none !important;
+}
+
+.layer_hidden {
+    @apply hidden;
+}
+
+.layer-container {
+    @apply relative pointer-events-auto;
+}
+
+.layer.layer-leave-active .layer-container,
+.layer_back .layer-container {
+    @apply pointer-events-none;
+}
+
+.layer.layer-enter-active,
+.layer.layer-leave-active {
+    @apply fixed;
+}

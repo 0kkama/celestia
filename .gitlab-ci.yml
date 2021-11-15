@@ -1,0 +1,56 @@
+variables:
+    GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME
+    GIT_STRATEGY: 'fetch'
+    GIT_CHECKOUT: 'true'
+    GIT_CLEAN_FLAGS: 'none'
+    GIT_DEPTH: 0
+
+stages:
+    - deploy
+
+deploy-review:
+    stage: deploy
+    variables:
+        CI_ENVIRONMENT_DOMAIN: $CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.dev.creonit.ru
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        url: https://$CI_PROJECT_NAME-$CI_COMMIT_REF_NAME.dev.creonit.ru
+        on_stop: stop-review
+        auto_stop_in: 4 week
+    script:
+        - app/stage/build
+    only:
+        - branches
+    except:
+        - master
+        - develop
+
+stop-review:
+    stage: deploy
+    variables:
+        GIT_STRATEGY: none
+    script:
+        - docker-compose down --remove-orphans
+        - find -mindepth 1 -delete
+    when: manual
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        action: stop
+    only:
+        - branches
+    except:
+        - master
+        - develop
+
+deploy-staging:
+    stage: deploy
+    variables:
+        CI_ENVIRONMENT_DOMAIN: $CI_PROJECT_NAME.dev.creonit.ru
+    environment:
+        name: staging
+        url: https://$CI_PROJECT_NAME.dev.creonit.ru
+    script:
+        - app/stage/build
+    only:
+        - develop
+
