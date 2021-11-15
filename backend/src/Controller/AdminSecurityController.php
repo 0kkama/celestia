@@ -27,7 +27,6 @@ class AdminSecurityController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-//        test test
         dump($error);
         return $this->render('admin/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
@@ -41,14 +40,14 @@ class AdminSecurityController extends AbstractController
     }
 
     /**
-     * @Route("/test",name="test")
+     * @Route("/test", name="test")
      * @return Response
      */
     public function test(): Response
     {
         return $this->json([
             'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PrimusController.php',
+            'path' => 'src/Controller/AdminSecurityController.php',
         ]);
     }
 }

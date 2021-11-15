@@ -24,9 +24,9 @@ database:
 # user tables =======
     user:
         type: tinyint
-        first_name: text
-        last_name: text
-        middle_name: text
+        first_name: longvarchar
+        last_name: longvarchar
+        middle_name: longvarchar
         email: varchar(255)
         phone: varchar(255)
         password: varchar(255)
@@ -46,7 +46,7 @@ database:
     user_group:
         title: varchar(255)
         name: varchar(50) key(10)
-        roles: array
+        roles: longvarchar
 
     user_group_rel:
         user_id: int > user.id
@@ -55,20 +55,20 @@ database:
 
 # page and content tables ======
     content:
-        text: longtext
+        text: clob
         completed: bool
         +behavior:
             - timestampable
 
     page_site:
-        title: text
-        host: text
+        title: longvarchar
+        host: longvarchar
         +behavior:
             - sortable
             - timestampable
 
     content_block:
-        data: text
+        data: longvarchar
         type: varchar(20)
         size: tinyint(4)
         visible: bool
@@ -80,15 +80,15 @@ database:
         link_id: int
         page_site_id: int > page_site.id
         type: tinyint(4)
-        slug: text
-        url: text
-        title: text
-        menu_title: text
-        name: text
-        host: text
-        meta_title: text
-        meat_description: text
-        meta_keywords: text
+        slug: longvarchar
+        url: longvarchar
+        title: longvarchar
+        menu_title: longvarchar
+        name: longvarchar
+        host: longvarchar
+        meta_title: longvarchar
+        meat_description: longvarchar
+        meta_keywords: longvarchar
         visible: bool
         hide: bool
         +behavior:
@@ -100,14 +100,13 @@ database:
     holder:
         complete: bool
         page_id: int > page.id
-
 # =======
 
 # files tables =======
     file:
-        path: text
-        name: text
-        original_name: text
+        path: longvarchar
+        name: longvarchar
+        original_name: longvarchar
         extension: varchar(10)
         mime: varchar(100)
         size: int
@@ -119,21 +118,21 @@ database:
             - timestampable
 
     video:
-        source: text
+        source: longvarchar
         +behavior:
             - file
             - timestampable
 
     image:
-        source: text
+        source: longvarchar
         +behavior:
             - file
             - timestampable
 
     gallery_item:
         gallery_id: int > gallery.id
-        title: text
-        description: text
+        title: longvarchar
+        description: longvarchar
         cover: bool
         visible: bool
         +behavior:
@@ -146,9 +145,9 @@ database:
 
 # storage data tables ======
     storage_data_entry:
-        item_name: text
+        item_name: longvarchar
         locale: varchar(10)
-        context: text
+        context: longvarchar
         visible: bool
         +behavior:
             - sortable
@@ -156,39 +155,39 @@ database:
 
     storage_data_field:
         storage_data_entry_id: int > storage_data_entry.id
-        field_name: text
+        field_name: longvarchar
         locale: varchar(10)
-        value: text
+        value: longvarchar
         +behavior:
             - timestampable
 # =======
 
 # product category brand tables=======
     brand:
-        name: text
-        image: text
+        name: longvarchar
+        image: longvarchar
 
     product:
         brand_id: int > brand.id
         price: double(9,2)
         rating: tinyint(5)
-        article: text
-        name: text
-        slug: text
-        main_image: text
-        content: text
-        description: text
-        properties: text
-        images_list: text
+        article: longvarchar
+        name: longvarchar
+        slug: longvarchar
+        main_image: longvarchar
+        content: longvarchar
+        description: longvarchar
+        properties: longvarchar
+        images_list: longvarchar
         +behavior:
             - timestampable
             - sortable
 
     product_category:
-        name: text
-        image: text
-        content: text
-        products_nb: int
+        name: longvarchar
+        image: longvarchar
+        content: longvarchar
+        products_amount: int
 
     product_category_rel:
         product_id: int > product.it
