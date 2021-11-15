@@ -21,12 +21,13 @@ database:
 #    content_block:
 #        data: longvarchar
 
+
 # user tables =======
     user:
         type: tinyint
-        first_name: longvarchar
-        last_name: longvarchar
-        middle_name: longvarchar
+        first_name: text
+        last_name: text
+        middle_name: text
         email: varchar(255)
         phone: varchar(255)
         password: varchar(255)
@@ -46,7 +47,7 @@ database:
     user_group:
         title: varchar(255)
         name: varchar(50) key(10)
-        roles: longvarchar
+        roles: array
 
     user_group_rel:
         user_id: int > user.id
@@ -55,22 +56,22 @@ database:
 
 # page and content tables ======
     content:
-        text: clob
+        text: text
         completed: bool
         +behavior:
             - timestampable
 
     page_site:
-        title: longvarchar
-        host: longvarchar
+        title: text
+        host: text
         +behavior:
             - sortable
             - timestampable
 
     content_block:
-        data: longvarchar
+        data: text
         type: varchar(20)
-        size: tinyint(4)
+        size: int
         visible: bool
         +behavior:
             - tree
@@ -79,16 +80,16 @@ database:
     page:
         link_id: int
         page_site_id: int > page_site.id
-        type: tinyint(4)
-        slug: longvarchar
-        url: longvarchar
-        title: longvarchar
-        menu_title: longvarchar
-        name: longvarchar
-        host: longvarchar
-        meta_title: longvarchar
-        meat_description: longvarchar
-        meta_keywords: longvarchar
+        type: int
+        slug: text
+        url: text
+        title: text
+        menu_title: text
+        name: text
+        host: text
+        meta_title: text
+        meat_description: text
+        meta_keywords: text
         visible: bool
         hide: bool
         +behavior:
@@ -98,15 +99,16 @@ database:
             - timestampable
 
     holder:
-        complete: bool
-        page_id: int > page.id
+        complete: bool = 0
+        +behavior:
+            - holder
 # =======
 
 # files tables =======
     file:
-        path: longvarchar
-        name: longvarchar
-        original_name: longvarchar
+        path: text
+        name: text
+        original_name: text
         extension: varchar(10)
         mime: varchar(100)
         size: int
@@ -118,21 +120,21 @@ database:
             - timestampable
 
     video:
-        source: longvarchar
+        source: text
         +behavior:
             - file
             - timestampable
 
     image:
-        source: longvarchar
+        source: text
         +behavior:
             - file
             - timestampable
 
     gallery_item:
         gallery_id: int > gallery.id
-        title: longvarchar
-        description: longvarchar
+        title: text
+        description: text
         cover: bool
         visible: bool
         +behavior:
@@ -145,9 +147,9 @@ database:
 
 # storage data tables ======
     storage_data_entry:
-        item_name: longvarchar
+        item_name: text
         locale: varchar(10)
-        context: longvarchar
+        context: text
         visible: bool
         +behavior:
             - sortable
@@ -155,46 +157,48 @@ database:
 
     storage_data_field:
         storage_data_entry_id: int > storage_data_entry.id
-        field_name: longvarchar
+        field_name: text
         locale: varchar(10)
-        value: longvarchar
+        value: text
         +behavior:
             - timestampable
 # =======
 
 # product category brand tables=======
     brand:
-        name: longvarchar
-        image: longvarchar
+        name: text
+        image: text
 
     product:
         brand_id: int > brand.id
         price: double(9,2)
-        rating: tinyint(5)
-        article: longvarchar
-        name: longvarchar
-        slug: longvarchar
-        main_image: longvarchar
-        content: longvarchar
-        description: longvarchar
-        properties: longvarchar
-        images_list: longvarchar
+        # общий рейтинг продукта
+        rating: int
+        article: text
+        name: text
+        slug: text
+        main_image: text
+        content: text
+        description: text
+        properties: text
+        images_list: text
         +behavior:
             - timestampable
             - sortable
 
     product_category:
-        name: longvarchar
-        image: longvarchar
-        content: longvarchar
+        name: text
+        image: text
+        content: text
         products_amount: int
 
     product_category_rel:
-        product_id: int > product.it
+        product_id: int > product.id
         category_id: int > product_category.id
 
     rating:
         product_id: int > product.id
         user_id: int > user_id
-        rate: tinyint(5)
+        # оценка одного продукта одним пользователем
+        rate: int
 # =======
