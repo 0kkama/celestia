@@ -18,11 +18,9 @@ database:
     +behavior:
         - auto_add_pk
 
-#    content_block:
-#        data: longvarchar
+    content_block:
+        data: longvarchar
 
-
-# user tables =======
     user:
         type: tinyint
         first_name: text
@@ -39,8 +37,7 @@ database:
         user_id: int > user.id
         token: varchar(64) key
         refresh_token: varchar(64) key
-        expired_at:
-            - datetime
+        expired_at: - datetime
         +behavior:
             - timestampable
 
@@ -52,153 +49,46 @@ database:
     user_group_rel:
         user_id: int > user.id
         user_group_id: int > user_group.id
-# =======
 
-# page and content tables ======
-    content:
-        text: text
-        completed: bool
-        +behavior:
-            - timestampable
 
-    page_site:
+    product_brand:
         title: text
-        host: text
         +behavior:
-            - sortable
-            - timestampable
-
-    content_block:
-        data: text
-        type: varchar(20)
-        size: int
-        visible: bool
-        +behavior:
-            - tree
-            - sortable
-
-    page:
-        link_id: int
-        page_site_id: int > page_site.id
-        type: int
-        slug: text
-        url: text
-        title: text
-        menu_title: text
-        name: text
-        host: text
-        meta_title: text
-        meat_description: text
-        meta_keywords: text
-        visible: bool
-        hide: bool
-        +behavior:
-            - tree
-            - content
-            - sortable
-            - timestampable
-
-    holder:
-        complete: bool = 0
-        +behavior:
-            - holder
-# =======
-
-# files tables =======
-    file:
-        path: text
-        name: text
-        original_name: text
-        extension: varchar(10)
-        mime: varchar(100)
-        size: int
-        +behavior:
-            - timestampable
-
-    gallery:
-        +behavior:
-            - timestampable
-
-    video:
-        source: text
-        +behavior:
-            - file
-            - timestampable
-
-    image:
-        source: text
-        +behavior:
-            - file
-            - timestampable
-
-    gallery_item:
-        gallery_id: int > gallery.id
-        title: text
-        description: text
-        cover: bool
-        visible: bool
-        +behavior:
-            - sortable
-            - timestampable
-            - file
             - image
-            - video
-# =======
-
-# storage data tables ======
-    storage_data_entry:
-        item_name: text
-        locale: varchar(10)
-        context: text
-        visible: bool
-        +behavior:
-            - sortable
-            - timestampable
-
-    storage_data_field:
-        storage_data_entry_id: int > storage_data_entry.id
-        field_name: text
-        locale: varchar(10)
-        value: text
-        +behavior:
-            - timestampable
-# =======
-
-# product category brand tables=======
-    brand:
-        name: text
-        image: text
 
     product:
-        brand_id: int > brand.id
-        price: double(9,2)
-        # общий рейтинг продукта
-        rating: int
-        article: text
-        name: text
+        brand_id: int > product_brand.id
+        price: decimal(9,2)
+        rating: tinyint(5) = 0
+        article_number: text
+        title: text
         slug: text
-        main_image: text
         content: text
         description: text
         properties: text
-        images_list: text
+        keywords: text
+        quantity: int
+        visible: bool = 1
         +behavior:
             - timestampable
             - sortable
+            - image
+            - gallery
 
     product_category:
-        name: text
-        image: text
+        title: text
         content: text
-        products_amount: int
+        product_amount: int
+        +behavior:
+            - image
+            - sortable: product_amount
 
     product_category_rel:
         product_id: int > product.id
-        category_id: int > product_category.id
+        product_category_id: int > product_category.id
 
-    rating:
+    product_rating:
         product_id: int > product.id
-        user_id: int > user_id
-        # оценка одного продукта одним пользователем
-        rate: int
+        user_id: int > user.id
+        rate: tinyint(5) = 0
 # =======
