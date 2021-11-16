@@ -91,4 +91,3 @@ database:
         product_id: int > product.id
         user_id: int > user.id
         rate: tinyint(5) = 0
-# =======
