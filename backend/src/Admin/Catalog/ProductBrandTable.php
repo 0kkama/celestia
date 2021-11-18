@@ -1,21 +1,25 @@
 <?php
 
-    namespace App\Admin\Product;
+    namespace App\Admin\Catalog;
 
     use Creonit\AdminBundle\Component\TableComponent;
 
-    class ProductTable extends TableComponent
+    class ProductBrandTable extends TableComponent
     {
 
         /**
-         * @title Товар
+         * @title
+         *
          * @header
          *
          * @cols
          *
-         *\Product
-         * @sortable
+         * @entity ProductBrand
+         * @field
+         * @field
          *
+         * @col {{  }}
+         * @col {{  }}
          */
         public function schema()
         {
