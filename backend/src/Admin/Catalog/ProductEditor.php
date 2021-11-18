@@ -38,7 +38,7 @@
          * {{ slug | text | group('URL') }}
          * {{ article_number | text | group('Артикул') }}
          * {{ brand_id | text | group('Брэнд') }}
-         * {{ brand_id | text | group('Свойства') }}
+         * {{ properties | text | group('Свойства') }}
          * {{ keywords | text | group('Ключевые слова') }}
          *
          */
