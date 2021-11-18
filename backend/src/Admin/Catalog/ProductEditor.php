@@ -16,6 +16,12 @@
          * @field price type:text {constraints: [NotBlank()]}
          * @field description type:textarea {constraints: [NotBlank()]}
          *
+         * @template
+         * {{ title | text | group{'Название') }}
+         * {{ url | text | group('URL') }}
+         * {{ price | text | group('Цена') }}
+         * {{ content | text | group('Описание') }}
+         *
          */
         public function schema()
         {

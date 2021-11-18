@@ -10,7 +10,7 @@
         {
             $this
                 ->setTitle('Каталог')
-                ->setIcon('clipboard-list')
+                ->setIcon('newspaper-o')
                 ->setTemplate('ProductTable');
         }
 

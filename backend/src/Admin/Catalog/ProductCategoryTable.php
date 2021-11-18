@@ -10,14 +10,16 @@
         /**
          * @title Категории
          *
-         * @header {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
+         * @header
+         * {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
          *
-         * @cols ID, Название, Количество товаров, Изображение
+         * @cols ID, Название, Описание, Количество товаров, Изображение
          *
-         * @entity ProductCategory
+         * \ProductCategory
          *
          * @col {{ id }}
          * @col {{ title }}
+         * @col {{ content }}
          * @col {{ products_amount }}
          * @col {{ image_id }}
          */
