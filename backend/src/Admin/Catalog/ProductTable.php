@@ -2,6 +2,7 @@
 
     namespace App\Admin\Catalog;
 
+    use App\Model\ProductBrandQuery;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
     use Creonit\AdminBundle\Component\Response\ComponentResponse;
     use Creonit\AdminBundle\Component\Scope\Scope;
@@ -22,20 +23,25 @@
          * {{ submit('Обновить', {size: 'sm'}) }}
          * </form>
          *
-         * @cols ID, Название, URL, Цена, Описание, Свойства, Рейтинг
+         * @cols ID, Название, URL, Цена, Описание, резюме, Свойства, Рейтинг, Брэнд, Артикл .
          *
          * \Product
          *
          * @col {{ id }}
-         * @col {{ title | open('ProductEditor', {id: id})}}
+         * @col {{ title | open('ProductEditor', {key: _key}) }}
          * @col {{ slug }}
          * @col {{ price }}
          * @col {{ content }}
+         * @col {{ description }}
          * @col {{ properties }}
          * @col {{ rating }}
+         * @col {{ brand_id }}
+         * @col {{ article_number }}
+         * @col {{ buttons(_visible()~_delete()) }}
          *
          */
         public function schema()
         {
         }
+
     }

@@ -8,8 +8,8 @@
     {
 
         /**
-         * @title Категория
          * @entity ProductCategory
+         * @title Категория
          *
          * @field title
          * @field image_id

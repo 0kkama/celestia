@@ -18,7 +18,7 @@
          * \ProductCategory
          *
          * @col {{ id }}
-         * @col {{ title }}
+         * @col {{ title | open('ProductCategoryEditor', {key: _key}) }}
          * @col {{ content }}
          * @col {{ products_amount }}
          * @col {{ image_id }}
