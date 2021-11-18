@@ -9,15 +9,16 @@
 
         /**
          * @title Продукт
-         * @entity Product
          *
-         * @field title type:text {constraints: [NotBlank()]}
-         * @field slug type:text {constraints: [NotBlank()]}
-         * @field price type:text {constraints: [NotBlank()]}
-         * @field description type:textarea {constraints: [NotBlank()]}
+         * \Product
+         *
+         * @field title
+         * @field slug
+         * @field price
+         * @field content
          *
          * @template
-         * {{ title | text | group{'Название') }}
+         * {{ title | text | group('Название') }}
          * {{ url | text | group('URL') }}
          * {{ price | text | group('Цена') }}
          * {{ content | text | group('Описание') }}

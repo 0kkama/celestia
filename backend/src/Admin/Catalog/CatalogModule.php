@@ -12,6 +12,7 @@
                 ->setTitle('Каталог')
                 ->setIcon('newspaper-o')
                 ->setTemplate('ProductTable');
+//                ->setTemplate('ProductCategoryTable');
         }
 
         public function initialize(): void
