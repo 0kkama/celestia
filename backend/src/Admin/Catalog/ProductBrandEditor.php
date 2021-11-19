@@ -8,23 +8,13 @@
     {
 
         /**
-         * @title
+         * @title Брэнд
+         * @entity ProductBrand
          *
-         * @header
+         * @field title {constraints: [NotBlank()]}
          *
-         * @cols
-         *
-         * @entity
-         * @field
-         * @field
-         * @field
-         * @field
-         *
-         * @col {{  }}
-         * @col {{  }}
-         * @col {{  }}
-         * @col {{  }}
-         * @col {{  }}
+         * @template
+         * {{ title | text | group('Название') }}
          */
         public function schema()
         {

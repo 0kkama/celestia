@@ -12,7 +12,7 @@
          * @header
          * {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
          *
-         * @cols ID, Название, Описание, Количество товаров, Изображение
+         * @cols ID, Название, Описание, Количество товаров, Изображение, .
          *
          * \ProductCategory
          *
@@ -21,6 +21,7 @@
          * @col {{ content }}
          * @col {{ products_amount }}
          * @col {{ image_id }}
+         * @col {{ buttons(_delete()) }}
          */
         public function schema()
         {

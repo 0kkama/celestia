@@ -8,18 +8,19 @@
     {
 
         /**
-         * @title Брэнд
+         * @title Брэнды
          *
          * @header
-         * {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
+         * {{ button('Добавить брэнд', {size: 'sm'}) | open('ProductBrandEditor') }}
          *
-         * @cols ID, Название, Изображение,
+         * @cols ID, Название, Изображение, .
          *
          * \ProductBrand
          *
          * @col {{ id }}
-         * @col {{ title }}
+         * @col {{ title | open('ProductBrandEditor', {key: _key}) }}
          * @col {{ image_id }}
+         * @col {{ buttons(_delete()) }}
          */
         public function schema()
         {

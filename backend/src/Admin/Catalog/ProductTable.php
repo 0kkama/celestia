@@ -11,11 +11,11 @@
 
     class ProductTable extends TableComponent
     {
-
         /**
          * @title Продукты
          * @header
          * {{ button('Список категорий', {size: 'sm'}) | open('ProductCategoryTable') }}
+         * {{ button('Список брэндов', {size: 'sm'}) | open('ProductBrandTable') }}
          * {{ button('Добавить продукт', {size: 'sm'}) | open('ProductEditor') }}
          *
          * <form class="form-inline pull-right">

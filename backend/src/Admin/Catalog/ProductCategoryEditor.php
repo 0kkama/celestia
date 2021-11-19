@@ -8,15 +8,15 @@
     {
 
         /**
-         * @entity ProductCategory
          * @title Категория
+         * @entity ProductCategory
          *
          * @field title {constraints: [NotBlank()]}
          * @field content {constraints: [NotBlank()]}
-         * @field product_amount {constraints: [NotBlank()]}
          *
+         * @template
          * {{ title | text | group('Название') }}
-         * {{ image_id | text | group('ID изображения') }}
+         * {{ content | text | group('Описание') }}
          *
          */
         public function schema()
