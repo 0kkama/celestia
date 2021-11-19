@@ -9,7 +9,6 @@
 
         /**
          * @title Категории
-         *
          * @header
          * {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
          *

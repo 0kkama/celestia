@@ -76,7 +76,7 @@ database:
     product_category:
         title: text
         content: text
-        products_amount: int
+        products_amount: int = 0
         +behavior:
             - image
             - sortable

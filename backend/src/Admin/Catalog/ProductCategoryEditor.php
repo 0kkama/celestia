@@ -11,8 +11,9 @@
          * @entity ProductCategory
          * @title Категория
          *
-         * @field title
-         * @field image_id
+         * @field title {constraints: [NotBlank()]}
+         * @field content {constraints: [NotBlank()]}
+         * @field product_amount {constraints: [NotBlank()]}
          *
          * {{ title | text | group('Название') }}
          * {{ image_id | text | group('ID изображения') }}

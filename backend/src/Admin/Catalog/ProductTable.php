@@ -23,7 +23,7 @@
          * {{ submit('Обновить', {size: 'sm'}) }}
          * </form>
          *
-         * @cols ID, Название, URL, Цена, Описание, резюме, Свойства, Рейтинг, Брэнд, Артикл .
+         * @cols ID, Название, URL, Цена, Описание, Резюме, Свойства, Рейтинг, Брэнд, Артикул, .
          *
          * \Product
          *
@@ -39,9 +39,12 @@
          * @col {{ article_number }}
          * @col {{ buttons(_visible()~_delete()) }}
          *
+         * @sortable
+         *
+         * @pagination 5
+         *
          */
         public function schema()
         {
         }
-
     }
