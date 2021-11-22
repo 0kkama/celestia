@@ -5,6 +5,8 @@
     use App\Model\Product;
     use App\Model\ProductBrandQuery;
     use App\Model\ProductCategoryQuery;
+    use App\Model\ProductCategoryRelQuery;
+    use App\Model\ProductQuery;
     use Cocur\Slugify\SlugifyInterface;
     use Creonit\AdminBundle\Component\EditorComponent;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
@@ -42,7 +44,7 @@
          * {{ slug | text({placeholder: 'Будет сформирован из названия'}) | group('URL') }}
          * {{ article_number | text | group('Артикул') }}
          * {{ brand_id | select | group('Выбрать бренд')}}
-         * {{ category | select | group('Выбрать категорию')}}
+         * {{ category_id | select | group('Выбрать категорию')}}
          * {{ properties | text | group('Свойства') }}
          * {{ keywords | text | group('Ключевые слова') }}
          *
@@ -51,11 +53,17 @@
         {
             $brands = ProductBrandQuery::create()->find();
             $brandsList = [];
-
             foreach ($brands as $brand) {
                 $brandsList[$brand->getId()] = $brand->getTitle();
             }
             $this->getField('brand_id')->setOptions($brandsList);
+
+            $categories = ProductCategoryQuery::create()->find();
+            $categoriesList = [];
+            foreach ($categories as $category) {
+                $categoriesList[$category->getId()] = $category->getTitle();
+            }
+            $this->getField('category_id')->setOptions($categoriesList);
         }
 
         /**
@@ -68,5 +76,6 @@
             if (!$entity->getSlug()) {
                 $entity->setSlug($this->slugify->slugify($entity->getTitle()));
             }
+
         }
     }
