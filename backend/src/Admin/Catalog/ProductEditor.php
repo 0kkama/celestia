@@ -3,6 +3,8 @@
     namespace App\Admin\Catalog;
 
     use App\Model\Product;
+    use App\Model\ProductBrandQuery;
+    use App\Model\ProductCategoryQuery;
     use Cocur\Slugify\SlugifyInterface;
     use Creonit\AdminBundle\Component\EditorComponent;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
@@ -25,9 +27,10 @@
          * @field description {constraints: [NotBlank()]}
          * @field content {constraints: [NotBlank()]}
          * @field price {constraints: [NotBlank()]}
+         * @field slug
          * @field article_number {constraints: [NotBlank()]}
-         * @field brand:external
-         * @field category:external
+         * @field brand_id:select
+         * @field category_id:select
          * @field properties {constraints: [NotBlank()]}
          * @field keywords {constraints: [NotBlank()]}
          *
@@ -38,14 +41,21 @@
          * {{ price | text | group('Цена') }}
          * {{ slug | text({placeholder: 'Будет сформирован из названия'}) | group('URL') }}
          * {{ article_number | text | group('Артикул') }}
-         * {{ brand | external('ChooseProductBrand', {query: {brand_id: _key} }) | group('Выбрать бренд') }}
-         * {{ category | external('ChooseProductCategory') | group('Выбрать категорию') }}
+         * {{ brand_id | select | group('Выбрать бренд')}}
+         * {{ category | select | group('Выбрать категорию')}}
          * {{ properties | text | group('Свойства') }}
          * {{ keywords | text | group('Ключевые слова') }}
          *
          */
         public function schema()
         {
+            $brands = ProductBrandQuery::create()->find();
+            $brandsList = [];
+
+            foreach ($brands as $brand) {
+                $brandsList[$brand->getId()] = $brand->getTitle();
+            }
+            $this->getField('brand_id')->setOptions($brandsList);
         }
 
         /**
