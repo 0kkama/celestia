@@ -6,7 +6,6 @@
 
     class ProductBrandEditor extends EditorComponent
     {
-
         /**
          * @title Брэнд
          * @entity ProductBrand
@@ -18,6 +17,5 @@
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
         }
     }

@@ -17,15 +17,14 @@
          * \ProductCategory
          *
          * @col {{ id }}
-         * @col {{ title | open('ProductCategoryEditor', {key: _key}) }}
+         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductBrandEditor', {key: _key}))) }}
          * @col {{ content }}
          * @col {{ products_amount }}
          * @col {{ image_id }}
-         * @col {{ buttons(_delete()) }}
+         * @col {{ _delete() }}
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
         }
 
     }

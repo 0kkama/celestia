@@ -6,7 +6,6 @@
 
     class ProductCategoryEditor extends EditorComponent
     {
-
         /**
          * @title Категория
          * @entity ProductCategory
@@ -21,6 +20,5 @@
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
         }
     }

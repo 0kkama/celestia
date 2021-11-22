@@ -22,7 +22,6 @@
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
         }
     }
 

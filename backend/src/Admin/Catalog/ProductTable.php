@@ -3,6 +3,10 @@
     namespace App\Admin\Catalog;
 
     use App\Model\ProductBrandQuery;
+    use App\Model\ProductCategoryQuery;
+    use App\Model\ProductCategoryRel;
+    use App\Model\ProductCategoryRelQuery;
+    use App\Model\ProductQuery;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
     use Creonit\AdminBundle\Component\Response\ComponentResponse;
     use Creonit\AdminBundle\Component\Scope\Scope;
@@ -14,37 +18,48 @@
         /**
          * @title Продукты
          * @header
-         * {{ button('Список категорий', {size: 'sm'}) | open('ProductCategoryTable') }}
-         * {{ button('Список брэндов', {size: 'sm'}) | open('ProductBrandTable') }}
-         * {{ button('Добавить продукт', {size: 'sm'}) | open('ProductEditor') }}
+         * {{ button('Список категорий', {size: 'sm', icon: 'bars', type: 'primary'}) | open('ProductCategoryTable') }}
+         * {{ button('Список брендов', {size: 'sm', icon: 'flag', type: 'info'}) | open('ProductBrandTable') }}
+         * {{ button('Добавить продукт', {size: 'sm' , icon: 'bomb', type: 'success'}) | open('ProductEditor') }}
          *
          * <form class="form-inline pull-right">
-         * {{ search | text({placeholder: 'Поиск', size: 'sm'}) | group('Поиск') }}
+         * {{ search | text({placeholder: 'Название', size: 'sm'}) | group('Поиск') }}
          * {{ submit('Обновить', {size: 'sm'}) }}
          * </form>
          *
-         * @cols ID, Название, URL, Цена, Описание, Резюме, Свойства, Рейтинг, Брэнд, Артикул, .
+         * @cols ID, Название, URL, Цена, Описание, Резюме, Свойства, Рейтинг, Бренд, Артикул, Категория, .
+         *
          *
          * \Product
-         *
          * @col {{ id }}
-         * @col {{ title | open('ProductEditor', {key: _key}) }}
+         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductEditor', {key: _key}))) }}
          * @col {{ slug }}
          * @col {{ price }}
          * @col {{ content }}
          * @col {{ description }}
          * @col {{ properties }}
          * @col {{ rating }}
-         * @col {{ brand_id }}
+         * @col {{ brand }}
          * @col {{ article_number }}
+         * @col {{ category }}
          * @col {{ buttons(_visible()~_delete()) }}
          *
-         * @sortable
-         *
+         * @sortable true
          * @pagination 5
          *
          */
         public function schema()
         {
+        }
+
+        protected function decorate(ComponentRequest $request, ComponentResponse $response, ParameterBag $data, $entity, Scope $scope, $relation, $relationValue, $level)
+        {
+            $data->set('brand', $entity->getProductBrand()->getTitle());
+
+            $category = $entity->getProductCategoryRelsJoinProductCategory()
+                ->getFirst()
+                ->getProductCategory()
+                ->getTitle();
+            $data->set('category', $category);
         }
     }

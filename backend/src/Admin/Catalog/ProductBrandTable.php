@@ -6,7 +6,6 @@
 
     class ProductBrandTable extends TableComponent
     {
-
         /**
          * @title Брэнды
          *
@@ -18,12 +17,11 @@
          * \ProductBrand
          *
          * @col {{ id }}
-         * @col {{ title | open('ProductBrandEditor', {key: _key}) }}
+         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductBrandEditor', {key: _key}))) }}
          * @col {{ image_id }}
-         * @col {{ buttons(_delete()) }}
+         * @col {{ _delete() }}
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
         }
     }
