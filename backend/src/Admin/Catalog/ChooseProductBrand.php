@@ -11,12 +11,6 @@
          *
          * \ProductBrand
          *
-         * <div class="pull-right">
-         *   <div class="label label-default">{{ title }}</div>
-         * </div>
-         * <strong>
-         *   {{ title | icon('globe') | action('external', _key) | controls }}
-         * </strong>
          *
          * \ProductBrand
          * @col {{ id }}
@@ -24,7 +18,7 @@
          * @col {{ image_id }}
          *
          * @col
-         * {{ title | icon(icon) | action('external', _key) | controls }}
+         * {{ title | action('external', _key) | controls }}
          *
          */
         public function schema()

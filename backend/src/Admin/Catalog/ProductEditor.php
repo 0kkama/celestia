@@ -7,8 +7,6 @@
     use Creonit\AdminBundle\Component\EditorComponent;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
     use Creonit\AdminBundle\Component\Response\ComponentResponse;
-    use Creonit\AdminBundle\Component\Scope\Scope;
-    use Symfony\Component\HttpFoundation\ParameterBag;
 
     class ProductEditor extends EditorComponent
     {
