@@ -5,8 +5,8 @@
     use App\Model\Product;
     use App\Model\ProductBrandQuery;
     use App\Model\ProductCategoryQuery;
+    use App\Model\ProductCategoryRel;
     use App\Model\ProductCategoryRelQuery;
-    use App\Model\ProductQuery;
     use Cocur\Slugify\SlugifyInterface;
     use Creonit\AdminBundle\Component\EditorComponent;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
@@ -76,6 +76,20 @@
             if (!$entity->getSlug()) {
                 $entity->setSlug($this->slugify->slugify($entity->getTitle()));
             }
+        }
 
+        public function postSave(ComponentRequest $request, ComponentResponse $response, $entity)
+        {
+            $prodId = $entity->getId();
+            $catId = $request->data->get('category_id');
+
+            $category = ProductCategoryQuery::create()->findOneById($catId);
+            $amount = $category->getProductsAmount();
+            $category->setProductsAmount($amount + 1)->save();
+
+            $prodCatRel = new ProductCategoryRel();
+            $prodCatRel->setProductId($prodId);
+            $prodCatRel->setProductCategoryId($catId);
+            $prodCatRel->save();
         }
     }
