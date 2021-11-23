@@ -16,7 +16,7 @@
          * @template
          * {{ title | text | group('Название') }}
          * {{ content | text | group('Описание') }}
-         *
+         *  {{ image_id | image | group('Изображение') }}
          */
         public function schema()
         {
