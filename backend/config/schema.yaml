@@ -90,12 +90,17 @@ database:
         user_id: int > user.id
         rate: tinyint = 0
 
-    product_property:
-        title: text
+#    product_property:
+#        title: text
+#
+#    product_property_rel:
+#        product_id: int > product.id
+#        product_property_id: int > product_property.id
+#        value: text
 
-    product_property_rel:
+    product_property:
         product_id: int > product.id
-        product_property_id: int > product_property.id
+        title: text
         value: text
 
 
