@@ -46,6 +46,7 @@
          * {{ category_id | select | group('Выбрать категорию') }}
          * {{ properties | text | group('Свойства') }}
          * {{ keywords | text | group('Ключевые слова') }}
+         * {{ gallery_id | gallery | group('Добавить изображения') }}
          *
          */
         public function schema()

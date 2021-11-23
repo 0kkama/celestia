@@ -23,20 +23,18 @@
          * {{ submit('Обновить', {size: 'sm'}) }}
          * </form>
          *
-         * @cols ID, Название, URL, Цена, Описание, Резюме, Свойства, Рейтинг, Бренд, Артикул, Категория, .
+         * @cols ID, Название, Цена, Описание, Свойства, Рейтинг, Бренд, Категория, Галерея.
          *
          * \Product
          * @col {{ id }}
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductEditor', {key: _key}))) }}
-         * @col {{ slug }}
          * @col {{ price }}
-         * @col {{ content }}
          * @col {{ description }}
          * @col {{ properties }}
          * @col {{ rating }}
          * @col {{ brand }}
-         * @col {{ article_number }}
          * @col {{ category }}
+         * @col {{ gallery_id }}
          * @col {{ buttons(_visible()~_delete()) }}
          *
          * @sortable true
@@ -45,7 +43,6 @@
          */
         public function schema()
         {
-//            $this->container->get($id);
         }
 
         protected function decorate(ComponentRequest $request, ComponentResponse $response, ParameterBag $data, $entity, Scope $scope, $relation, $relationValue, $level)
