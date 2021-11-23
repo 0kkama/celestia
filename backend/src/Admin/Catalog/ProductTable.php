@@ -2,11 +2,6 @@
 
     namespace App\Admin\Catalog;
 
-    use App\Model\ProductBrandQuery;
-    use App\Model\ProductCategoryQuery;
-    use App\Model\ProductCategoryRel;
-    use App\Model\ProductCategoryRelQuery;
-    use App\Model\ProductQuery;
     use Creonit\AdminBundle\Component\Request\ComponentRequest;
     use Creonit\AdminBundle\Component\Response\ComponentResponse;
     use Creonit\AdminBundle\Component\Scope\Scope;
@@ -21,6 +16,8 @@
          * {{ button('Список категорий', {size: 'sm', icon: 'bars', type: 'primary'}) | open('ProductCategoryTable') }}
          * {{ button('Список брендов', {size: 'sm', icon: 'flag', type: 'info'}) | open('ProductBrandTable') }}
          * {{ button('Добавить продукт', {size: 'sm' , icon: 'bomb', type: 'success'}) | open('ProductEditor') }}
+         * {{ button('Фильтровать по: ', {size: 'sm', icon: 'bars', type: 'primary'}) | checkbox('') }}
+         *
          *
          * <form class="form-inline pull-right">
          * {{ search | text({placeholder: 'Название', size: 'sm'}) | group('Поиск') }}
@@ -28,7 +25,6 @@
          * </form>
          *
          * @cols ID, Название, URL, Цена, Описание, Резюме, Свойства, Рейтинг, Бренд, Артикул, Категория, .
-         *
          *
          * \Product
          * @col {{ id }}
