@@ -16,7 +16,6 @@
          * {{ button('Список категорий', {size: 'sm', icon: 'bars', type: 'primary'}) | open('ProductCategoryTable') }}
          * {{ button('Список брендов', {size: 'sm', icon: 'flag', type: 'info'}) | open('ProductBrandTable') }}
          * {{ button('Добавить продукт', {size: 'sm' , icon: 'bomb', type: 'success'}) | open('ProductEditor') }}
-         * {{ button('Фильтровать по: ', {size: 'sm', icon: 'bars', type: 'primary'}) | checkbox('') }}
          *
          *
          * <form class="form-inline pull-right">
@@ -46,6 +45,7 @@
          */
         public function schema()
         {
+//            $this->container->get($id);
         }
 
         protected function decorate(ComponentRequest $request, ComponentResponse $response, ParameterBag $data, $entity, Scope $scope, $relation, $relationValue, $level)

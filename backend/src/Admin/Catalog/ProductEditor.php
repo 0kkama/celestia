@@ -38,7 +38,7 @@
          * @template
          * {{ title | text | group('Название') }}
          * {{ description | text | group('Краткое описание') }}
-         * {{ content | text | group('Полное описание') }}
+         * {{ content | textarea | group('Полное описание') }}
          * {{ price | text | group('Цена') }}
          * {{ slug | text({placeholder: 'Будет сформирован из названия'}) | group('URL') }}
          * {{ article_number | text | group('Артикул') }}
