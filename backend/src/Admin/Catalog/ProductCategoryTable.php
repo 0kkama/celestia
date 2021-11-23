@@ -12,13 +12,13 @@
          * @header
          * {{ button('Добавить категорию', {size: 'sm'}) | open('ProductCategoryEditor') }}
          *
-         * @cols ID, Название, Количество товаров, Изображение, .
+         * @cols ID, Название, Описание, Изображение, .
          *
          * \ProductCategory
          *
          * @col {{ id }}
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductCategoryEditor', {key: _key}))) }}
-         * @col {{ products_amount }}
+         * @col {{ content }}
          * @col {{ image_id }}
          * @col {{ _delete() }}
          */
