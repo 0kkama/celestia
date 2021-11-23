@@ -44,7 +44,7 @@
          * {{ article_number | text | group('Артикул') }}
          * {{ brand_id | select | group('Выбрать бренд')}}
          * {{ category_id | select | group('Выбрать категорию') }}
-         * {{ properties | text | group('Свойства') }}
+         * {{ component('ProductPropertyTable', {product_id: _key}) | group('Свойства') }}
          * {{ keywords | text | group('Ключевые слова') }}
          * {{ gallery_id | gallery | group('Добавить изображения') }}
          *

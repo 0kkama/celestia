@@ -15,6 +15,7 @@
          * @header
          * {{ button('Список категорий', {size: 'sm', icon: 'bars', type: 'primary'}) | open('ProductCategoryTable') }}
          * {{ button('Список брендов', {size: 'sm', icon: 'flag', type: 'info'}) | open('ProductBrandTable') }}
+         * {{ button('Список свойств', {size: 'sm', icon: 'briefcase', type: 'info'}) | open('ProductPropertyTable') }}
          * {{ button('Добавить продукт', {size: 'sm' , icon: 'bomb', type: 'success'}) | open('ProductEditor') }}
          *
          *
@@ -30,7 +31,7 @@
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductEditor', {key: _key}))) }}
          * @col {{ price }}
          * @col {{ description }}
-         * @col {{ properties }}
+         * @col {{ property }}
          * @col {{ rating }}
          * @col {{ brand }}
          * @col {{ category }}

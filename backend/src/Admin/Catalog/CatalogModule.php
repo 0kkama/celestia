@@ -23,7 +23,7 @@
             $this->addComponentAsService(ProductCategoryRelTable::class);
             $this->addComponentAsService(ProductBrandTable::class);
             $this->addComponentAsService(ProductBrandEditor::class);
-            $this->addComponentAsService(ChooseProductBrand::class);
-            $this->addComponentAsService(ChooseProductCategory::class);
+            $this->addComponentAsService(ProductPropertyTable::class);
+            $this->addComponentAsService(ProductPropertyEditor::class);
         }
     }
