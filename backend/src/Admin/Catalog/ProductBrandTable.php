@@ -7,10 +7,10 @@
     class ProductBrandTable extends TableComponent
     {
         /**
-         * @title Брэнды
+         * @title Бренды
          *
          * @header
-         * {{ button('Добавить брэнд', {size: 'sm'}) | open('ProductBrandEditor') }}
+         * {{ button('Добавить бренд', {size: 'sm'}) | open('ProductBrandEditor') }}
          *
          * @cols ID, Название, Изображение, .
          *

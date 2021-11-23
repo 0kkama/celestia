@@ -7,13 +7,14 @@
     class ProductBrandEditor extends EditorComponent
     {
         /**
-         * @title Брэнд
+         * @title Бренд
          * @entity ProductBrand
          *
          * @field title {constraints: [NotBlank()]}
          *
          * @template
          * {{ title | text | group('Название') }}
+         * {{ image_id | image | group('Изображение') }}
          */
         public function schema()
         {
