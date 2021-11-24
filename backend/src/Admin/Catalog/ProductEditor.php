@@ -44,7 +44,7 @@
          * {{ article_number | text | group('Артикул') }}
          * {{ brand_id | select | group('Выбрать бренд')}}
          * {{ category_id | select | group('Выбрать категорию') }}
-         * {{ component('ProductPropertyTable', {product_id: _key}) | group('Свойства') }}
+         * {{ component('ProductPropertyTable', {product_id: _key}) | group('Свойства продукта') }}
          * {{ keywords | text | group('Ключевые слова') }}
          * {{ gallery_id | gallery | group('Добавить изображения') }}
          *
@@ -64,6 +64,9 @@
                 $categoriesList[$category->getId()] = $category->getTitle();
             }
             $this->getField('category_id')->setOptions($categoriesList);
+
+
+
         }
 
         /**

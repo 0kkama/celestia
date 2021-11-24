@@ -6,7 +6,6 @@
 
     class ProductCategoryTable extends TableComponent
     {
-
         /**
          * @title Категории
          * @header
@@ -25,5 +24,4 @@
         public function schema()
         {
         }
-
     }

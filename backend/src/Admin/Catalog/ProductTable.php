@@ -15,16 +15,14 @@
          * @header
          * {{ button('Список категорий', {size: 'sm', icon: 'bars', type: 'primary'}) | open('ProductCategoryTable') }}
          * {{ button('Список брендов', {size: 'sm', icon: 'flag', type: 'info'}) | open('ProductBrandTable') }}
-         * {{ button('Список свойств', {size: 'sm', icon: 'briefcase', type: 'info'}) | open('ProductPropertyTable') }}
          * {{ button('Добавить продукт', {size: 'sm' , icon: 'bomb', type: 'success'}) | open('ProductEditor') }}
-         *
          *
          * <form class="form-inline pull-right">
          * {{ search | text({placeholder: 'Название', size: 'sm'}) | group('Поиск') }}
          * {{ submit('Обновить', {size: 'sm'}) }}
          * </form>
          *
-         * @cols ID, Название, Цена, Описание, Свойства, Рейтинг, Бренд, Категория, Галерея.
+         * @cols ID, Название, Цена, Описание, Свойства, Рейтинг, Бренд, Категория, Галерея,.
          *
          * \Product
          * @col {{ id }}

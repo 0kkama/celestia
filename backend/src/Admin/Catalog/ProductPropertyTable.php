@@ -9,16 +9,16 @@
 
         /**
          * @title Свойства
-         *
          * @header
          * {{ button('Добавить свойство', {size: 'sm'}) | open('ProductPropertyEditor') }}
          *
-         * @cols ID, Название, .
+         * @cols ID, Название, Значение, .
          *
          * \ProductProperty
          *
          * @col {{ id }}
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key}))) }}
+         * @col {{ value }}
          * @col {{ _delete() }}
          */
         public function schema()
