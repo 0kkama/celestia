@@ -64,9 +64,6 @@
                 $categoriesList[$category->getId()] = $category->getTitle();
             }
             $this->getField('category_id')->setOptions($categoriesList);
-
-
-
         }
 
         /**

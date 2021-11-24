@@ -17,6 +17,7 @@
          * \ProductProperty
          *
          * @col {{ id }}
+
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key}))) }}
          * @col {{ value }}
          * @col {{ _delete() }}

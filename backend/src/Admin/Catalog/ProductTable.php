@@ -53,5 +53,13 @@
                 ->getProductCategory()
                 ->getTitle();
             $data->set('category', $category);
+
+            $properties = $entity->getProductProperties();
+            $property = '';
+            foreach ($properties as $prop) {
+                $property .= $prop->getTitle() . ': ';
+                $property .= $prop->getValue() . '; ';
+            }
+            $data->set('property', $property);
         }
     }
