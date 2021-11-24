@@ -15,7 +15,7 @@
          * @field value {constraints: [NotBlank()]}
          *
          * @template
-         * {{ external
+         *
          * {{ title | text | group('Название') }}
          * {{ value | text | group('Значение') }}
          */
