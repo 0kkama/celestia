@@ -28,6 +28,8 @@
 
         public function preSave(ComponentRequest $request, ComponentResponse $response, $entity)
         {
-           $entity->setProductId($request->query->get('product_id'));
+            if($entity->isNew()) {
+                $entity->setProductId($request->query->get('product_id'));
+            }
         }
     }

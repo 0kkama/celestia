@@ -17,14 +17,13 @@
         /**
          * @title Свойства
          * @header
-         * {{ button('Добавить свойство', {size: 'sm'}) | open('ProductPropertyEditor') }}
+         * {{ button('Добавить свойство', {size: 'sm'}) | open('ProductPropertyEditor', {key: _key, product_id: _query.product_id}) }}
          *
          * @cols ID, Название, Значение, .
          *
          * \ProductProperty
          *
          * @col {{ id }}
-
          * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key, product_id: _query.product_id}))) }}
          * @col {{ value }}
          * @col {{ _delete() }}

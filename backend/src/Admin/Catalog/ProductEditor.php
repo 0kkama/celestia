@@ -44,7 +44,11 @@
          * {{ article_number | text | group('Артикул') }}
          * {{ brand_id | select | group('Выбрать бренд')}}
          * {{ category_id | select | group('Выбрать категорию') }}
-         * {{ component('ProductPropertyTable', {product_id: _key}) | group('Свойства продукта') }}
+         * {% if _key %}
+         *      {{ component('ProductPropertyTable', {product_id: _key}) | group('Свойства продукта') }}
+         * {% else %}
+         *      {{ 'Сперва создайте продукт для возможности добавлять свойства' }}
+         * {% endif %}
          * {{ keywords | text | group('Ключевые слова') }}
          * {{ gallery_id | gallery | group('Добавить изображения') }}
          *
