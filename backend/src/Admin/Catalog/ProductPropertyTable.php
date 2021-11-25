@@ -8,6 +8,8 @@
     use Creonit\AdminBundle\Component\Response\ComponentResponse;
     use Creonit\AdminBundle\Component\Scope\Scope;
     use Creonit\AdminBundle\Component\TableComponent;
+    use Symfony\Component\HttpFoundation\ParameterBag;
+
 
     class ProductPropertyTable extends TableComponent
     {
@@ -23,13 +25,12 @@
          *
          * @col {{ id }}
 
-         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key}))) }}
+         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key, product_id: product_id}))) }}
          * @col {{ value }}
          * @col {{ _delete() }}
          */
         public function schema()
         {
-
         }
 
         protected function filter(ComponentRequest $request, ComponentResponse $response, $query, Scope $scope, $relation, $relationValue, $level)
