@@ -25,7 +25,7 @@
          *
          * @col {{ id }}
 
-         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key, product_id: product_id}))) }}
+         * @col {{ title | controls(buttons(button('', {size: 'xs', icon: 'edit'}) | open('ProductPropertyEditor', {key: _key, product_id: _query.product_id}))) }}
          * @col {{ value }}
          * @col {{ _delete() }}
          */
