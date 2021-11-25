@@ -2,6 +2,11 @@
 
     namespace App\Admin\Catalog;
 
+    use App\Model\ProductPropertyQuery;
+    use App\Model\ProductQuery;
+    use Creonit\AdminBundle\Component\Request\ComponentRequest;
+    use Creonit\AdminBundle\Component\Response\ComponentResponse;
+    use Creonit\AdminBundle\Component\Scope\Scope;
     use Creonit\AdminBundle\Component\TableComponent;
 
     class ProductPropertyTable extends TableComponent
@@ -24,5 +29,11 @@
          */
         public function schema()
         {
+
+        }
+
+        protected function filter(ComponentRequest $request, ComponentResponse $response, $query, Scope $scope, $relation, $relationValue, $level)
+        {
+            $query->filterByProductId($request->query->get('product_id'));
         }
     }

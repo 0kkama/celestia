@@ -61,5 +61,6 @@
                 $property .= $prop->getValue() . '; ';
             }
             $data->set('property', $property);
+
         }
     }

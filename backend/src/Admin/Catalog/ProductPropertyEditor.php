@@ -3,6 +3,8 @@
     namespace App\Admin\Catalog;
 
     use Creonit\AdminBundle\Component\EditorComponent;
+    use Creonit\AdminBundle\Component\Request\ComponentRequest;
+    use Creonit\AdminBundle\Component\Response\ComponentResponse;
 
     class ProductPropertyEditor extends EditorComponent
     {
@@ -21,6 +23,10 @@
          */
         public function schema()
         {
-            // TODO: Implement schema() method.
+        }
+
+        public function preSave(ComponentRequest $request, ComponentResponse $response, $entity)
+        {
+           $entity->setProductId($request->data->get('product_id'));
         }
     }

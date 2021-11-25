@@ -11,6 +11,7 @@
          * @entity ProductBrand
          *
          * @field title {constraints: [NotBlank()]}
+         * @field product_id
          *
          * @template
          * {{ title | text | group('Название') }}

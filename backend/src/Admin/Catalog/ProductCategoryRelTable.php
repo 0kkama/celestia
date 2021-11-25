@@ -18,7 +18,6 @@
          * @field product_category_id
          *
          * @col {{ title }}
-         * @col {{  }}
          */
         public function schema()
         {
