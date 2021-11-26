@@ -42,10 +42,13 @@
          */
         public function schema()
         {
+
         }
 
         protected function decorate(ComponentRequest $request, ComponentResponse $response, ParameterBag $data, $entity, Scope $scope, $relation, $relationValue, $level)
         {
+            dump('string');
+            $this->dump('line');
             $data->set('brand', $entity->getProductBrand()->getTitle());
 
             $category = $entity->getProductCategoryRelsJoinProductCategory()

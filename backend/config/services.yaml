@@ -47,8 +47,4 @@ services:
     App\Security\Role\RoleHierarchy:
         parent: 'security.role_hierarchy'
 
-#    AppBundle\Admin\:
-#        resource: '../../src/AppBundle/Admin/*/*Module.php'
-#        public: false
-#        tags: [ 'creonit_admin.module' ]
 
