@@ -81,7 +81,7 @@
          */
         public function getCategoriesList(RestHandler $handler, ProductService $service): Response
         {
-            $categories = $service->getAllCategories();
+            $categories = $service->getCategoriesList();
 
             $handler->checkFound($categories);
             $handler->data->addGroup(ProductCategoryNormalizer::GROUP_LIST);
