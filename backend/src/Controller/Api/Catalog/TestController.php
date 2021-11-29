@@ -5,6 +5,7 @@
     use App\Model\ProductCategoryQuery;
     use App\Model\ProductCategoryRelQuery;
     use App\Model\ProductPropertyQuery;
+    use App\Model\ProductQuery;
     use App\Service\Catalog\ProductService;
     use Creonit\RestBundle\Handler\RestHandler;
     use Propel\Runtime\Exception\PropelException;
@@ -33,18 +34,31 @@
          */
         public function index(): Response
         {
-            $product = $this->productServ->getProductById(35);
-            ProductPropertyQuery::create()->filterByProduct($product)->find();
+//            $product = $this->productServ->getProductById(35);
+//
+//            $category = $this->productServ->getCategoryByProduct($product);
+
+//            ProductPropertyQuery::create()->filterByProduct($product)->find();
 //            $category = ProductCategoryQuery::create()
 //                ->leftJoin();
-            $category = ProductCategoryRelQuery::create()
-                ->filterByProduct($product)
-                ->find();
-            $this->handler->checkFound($product);
-            $this->handler->checkFound($category);
-            $data = ['product' => $product, 'category' => $category];
+
+//            $category = ProductCategoryRelQuery::create()
+//                ->filterByProduct($product)
+//                ->find();
+
+//            $this->handler->checkFound($product);
+//            $this->handler->checkFound($category);
+//            $data = ['product' => $product, 'category' => $category];
 //            $this->handler->data->set($product);
-            $this->handler->data->set($data);
+//            $this->handler->data->set($data);
+
+//            dump($product);
+
+//            $properties = ProductPropertyQuery::create()->filterByProduct($object)->find();
+
+//            $this->handler->checkFound($product);
+//            $this->handler->data->set($product);
+//
             return $this->handler->response();
         }
     }
