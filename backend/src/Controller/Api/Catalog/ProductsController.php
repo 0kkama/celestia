@@ -54,6 +54,8 @@
             $product = $service->getProductById($id);
 
             $handler->checkFound($product);
+
+
             $handler->data->set($product);
             return $handler->response();
         }

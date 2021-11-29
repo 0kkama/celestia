@@ -50,7 +50,8 @@
          *      {{ 'Сперва создайте продукт для возможности добавлять свойства' }}
          * {% endif %}
          * {{ keywords | text | group('Ключевые слова') }}
-         * {{ gallery_id | gallery | group('Добавить изображения') }}
+         * {{ image_id | image | group('Добавить изображение');
+         * {{ gallery_id | gallery | group('Создать галерею') }}
          *
          */
         public function schema()
