@@ -9,30 +9,46 @@
 
     class ProductNormalizer extends AbstractNormalizer
     {
+        public const GROUP_PAGE = 'product_page';
+        public const GROUP_LIST = 'products_list';
+        public const GROUP_TEST = 'products_test';
+
         public function normalize($object, string $format = null, array $context = [])
         {
-//            $category = ProductCategoryQuery::create()->filterBy($column, $value);
-//            $category = ProductCategoryRelQuery::create()->filterByProduct($object)->find();
-            $properties = ProductPropertyQuery::create()->filterByProduct($object)->find();
+            if ($this->hasGroup($context, self::GROUP_PAGE)) {
+                $data = [
+                    'id' => $object->getId(),
+                    'title' => $object->getTitle(),
+                    'brand' => [
+                        'title' => $object->getProductBrand()->getTitle(),
+                        'brand_image' => $object->getProductBrand()->getImage(),
+                    ],
+                    'price' => $object->getPrice(),
+                    'content' => $object->getContent(),
+                    'rating' => $object->getRating(),
+                    'gallery' => $object->getGallery(),
+                    'visible' => $object->getVisible(),
+                    'url' => $object->getSlug(),
+                ];
+            }
 
-            $data = [
-                'id' => $object->getId(),
-                'title' => $object->getTitle(),
-                'brand' => [
-                    'title' => $object->getProductBrand()->getTitle(),
-                    'brand_image' => $object->getProductBrand()->getImage(),
-                ],
-                'price' => $object->getPrice(),
-                'content' => $object->getContent(),
-//                'category' => $category,
-                'properties' => $properties,
-                'rating' => $object->getRating(),
-                'gallery' => $object->getGallery(),
-                'visible' => $object->getVisible(),
-                'slug' => $object->getSlug(),
-                //                    'properties' => $object->getProductProperties(),
-                //                'properties' => $object->getProperties(),
-            ];
+            if ($this->hasGroup($context, self::GROUP_LIST)) {
+                $data = [
+                    'id' => $object->getId(),
+                    'title' => $object->getTitle(),
+                    'image' => $object->getImage(),
+                    'price' => $object->getPrice(),
+                    'brand' => [
+                        'title' => $object->getProductBrand()->getTitle(),
+                        ],
+                    'properties' => $object,
+                    'rating' => $object,
+                    'url' => $object->getSlug(),
+                    ];
+            }
+
+            //            if ($this->hasGroup($context, self::GROUP_TEST)) {
+            //            }
 
             return $this->serializer->normalize($data, $format, $context);
         }
@@ -43,3 +59,7 @@
             return $data instanceof Product;
         }
     }
+
+
+
+
