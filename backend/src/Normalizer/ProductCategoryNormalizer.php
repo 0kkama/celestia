@@ -17,7 +17,7 @@
                     'id' => $object->getId(),
                     'title' => $object->getTitle(),
                     'slug' => $object->getSlug(),
-                    'products_amount' => $object->getProductsAmount(),
+                    'products_amount' => $object->getVirtualColumn('amount'),
                     'image' => $object->getImage(),
                 ];
             }
