@@ -33,22 +33,27 @@
             }
 
             if ($this->hasGroup($context, self::GROUP_LIST)) {
-                $data = [
-                    'id' => $object->getId(),
-                    'title' => $object->getTitle(),
-                    'image' => $object->getImage(),
-                    'price' => $object->getPrice(),
-                    'brand' => [
-                        'title' => $object->getProductBrand()->getTitle(),
-                        ],
-                    'properties' => $object,
-                    'rating' => $object,
-                    'url' => $object->getSlug(),
-                    ];
-            }
 
-            //            if ($this->hasGroup($context, self::GROUP_TEST)) {
-            //            }
+                $properties = ProductPropertyQuery::create()
+                    ->filterByProductId($object->getId())
+                    ->find();
+
+                $rating = $object->hasVirtualColumn('product_rate') ?
+                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
+
+                $data = [
+                    'id'         => $object->getId(),
+                    'title'      => $object->getTitle(),
+                    'image'      => $object->getImage(),
+                    'price'      => $object->getPrice(),
+                    'brand'      => [
+                        'title' => $object->getProductBrand()->getTitle(),
+                    ],
+                    'rating'     => $rating,
+                    'properties' => $properties,
+                    'url'        => $object->getSlug(),
+                ];
+            }
 
             return $this->serializer->normalize($data, $format, $context);
         }

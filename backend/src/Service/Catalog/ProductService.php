@@ -21,15 +21,26 @@
             return ProductQuery::create()->find();
         }
 
+        public function paginateProductsByCategoryId($id, $page, $limit)
+        {
+            return ProductQuery::create()
+                ->leftJoin('ProductRating')
+                ->withColumn('avg(ProductRating.rate)', 'product_rate')
+                ->joinWithProductCategoryRel()
+                ->where('ProductCategoryRel.product_category_id = '. $id)
+                ->groupBy('Product.id')
+                ->orderBy('product_rate')
+//                ->paginate(1, 3);
+                ->find();
+        }
+
         public function getCategoriesList()
         {
-            $categories = ProductCategoryQuery::create()
+            return ProductCategoryQuery::create()
                     ->join('ProductCategoryRel')
                     ->withColumn('count(*)', 'amount')
                     ->groupBy('ProductCategoryRel.product_category_id')
                     ->find();
-
-            return $categories;
         }
 
         public function getProductById($id): Product
