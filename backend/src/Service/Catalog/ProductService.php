@@ -4,6 +4,7 @@
 
     use App\Model\Map\ProductCategoryTableMap;
     use App\Model\Product;
+    use App\Model\ProductBrandQuery;
     use App\Model\ProductCategory;
     use App\Model\ProductCategoryQuery;
     use App\Model\ProductCategoryRelQuery;
@@ -41,6 +42,18 @@
                     ->withColumn('count(*)', 'amount')
                     ->groupBy('ProductCategoryRel.product_category_id')
                     ->find();
+        }
+
+        public function getBrandsListByCategoryId($id)
+        {
+            return ProductBrandQuery::create()
+                ->useProductQuery()
+                    ->joinWithProductCategoryRel()
+                    ->where('ProductCategoryRel.product_category_id = '. 1)
+                ->endUse()
+                ->joinProduct()
+                ->groupBy('ProductBrand.id')
+                ->find();
         }
 
         public function getProductById($id): Product

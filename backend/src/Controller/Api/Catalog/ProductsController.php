@@ -2,6 +2,7 @@
 
     namespace App\Controller\Api\Catalog;
 
+    use App\Normalizer\ProductBrandNormalizer;
     use App\Normalizer\ProductCategoryNormalizer;
     use App\Normalizer\ProductNormalizer;
     use App\Service\Catalog\ProductService;
@@ -42,7 +43,6 @@
          */
         public function getProductsByCategory(RestHandler $handler, ProductService $service, $category): Response
         {
-
             if (!$handler->getRequest()->query->get('view')) {
                 $handler->getRequest()->query->set('view', 'table');
             }
@@ -63,16 +63,24 @@
                 ]
             ]);
 
-
-            $page = $handler->getRequest()->query->get('page');
-            $limit = ($handler->getRequest()->query->get('view') === 'table') ? 9 : 20;
-
-            $products = $service->paginateProductsByCategoryId($category, $page, $limit);
-            dump($products);
-
+//            $page = $handler->getRequest()->query->get('page');
+//            $limit = ($handler->getRequest()->query->get('view') === 'table') ? 9 : 20;
+//
+//            $products = $service->paginateProductsByCategoryId($category, $page, $limit);
+            $products = $service->paginateProductsByCategoryId($category, 1, 3);
             $handler->checkFound($products);
+
+            $brands = $service->getBrandsListByCategoryId($category);
+            $handler->checkFound($brands);
+
+            //            dump($products);
+                        dump($brands);
+
+            $data = ['products' => $products, 'brand_list' => $brands];
+//
             $handler->data->addGroup(ProductNormalizer::GROUP_LIST);
-            $handler->data->set($products);
+            $handler->data->addGroup(ProductBrandNormalizer::GROUP_LIST);
+            $handler->data->set($data);
 
 //            $data = [1 => '1' , 2 => '2'];
 //            return $this->json($data);
