@@ -92,28 +92,18 @@
          *
          * @PathParameter("id", type="string", description="Идентификатор товара")
          *
-         * @Route("product/{id}", name="product_by_id", methods={"GET"}, requirements={"id"="[1-9]{1}\d*"})
+         * @Route("/product/{id}", name="product_by_id", methods={"GET"}, requirements={"id"="[1-9]{1}\d*"})
          */
         public function getProductById(RestHandler $handler, ProductService $service, $id): Response
         {
             $product = $service->getProductById($id);
-            $category = $service->getCategoryByProduct($product);
-            $properties = $service->getPropertiesOfProduct($product);
 
             $handler->checkFound($product);
-            $handler->checkFound($category);
-            $handler->checkFound($properties);
 
             $handler->data->addGroup(ProductNormalizer::GROUP_PAGE);
             $handler->data->addGroup(ProductCategoryNormalizer::GROUP_PRODUCT);
 
-            $data = [
-                'product' => $product,
-                'properties' => $properties,
-                'category' => $category,
-            ];
-
-            $handler->data->set($data);
+            $handler->data->set($product);
 
             return $handler->response();
         }

@@ -15,7 +15,19 @@
 
         public function normalize($object, string $format = null, array $context = [])
         {
+
+
             if ($this->hasGroup($context, self::GROUP_PAGE)) {
+                $category = ProductCategoryQuery::create()
+                    ->useProductCategoryRelQuery()
+                    ->filterByProduct($object)
+                    ->endUse()
+                    ->find();
+
+                $properties = ProductPropertyQuery::create()
+                    ->filterByProduct($object)
+                    ->find();
+
                 $data = [
                     'id' => $object->getId(),
                     'title' => $object->getTitle(),
@@ -26,6 +38,8 @@
                     'price' => $object->getPrice(),
                     'content' => $object->getContent(),
                     'rating' => $object->getRating(),
+                    'category' => $category,
+                    'properties' => $properties,
                     'gallery' => $object->getGallery(),
                     'visible' => $object->getVisible(),
                     'url' => $object->getSlug(),
@@ -38,8 +52,8 @@
                     ->filterByProductId($object->getId())
                     ->find();
 
-                $rating = $object->hasVirtualColumn('product_rate') ?
-                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
+//                $rating = $object->hasVirtualColumn('product_rate') ?
+//                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
 
                 $data = [
                     'id'         => $object->getId(),
@@ -49,7 +63,7 @@
                     'brand'      => [
                         'title' => $object->getProductBrand()->getTitle(),
                     ],
-                    'rating'     => $rating,
+//                    'rating'     => $rating,
                     'properties' => $properties,
                     'url'        => $object->getSlug(),
                 ];

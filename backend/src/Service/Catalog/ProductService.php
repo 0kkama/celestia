@@ -2,18 +2,11 @@
 
     namespace App\Service\Catalog;
 
-    use App\Model\Map\ProductCategoryTableMap;
     use App\Model\Product;
     use App\Model\ProductBrandQuery;
-    use App\Model\ProductCategory;
     use App\Model\ProductCategoryQuery;
-    use App\Model\ProductCategoryRelQuery;
     use App\Model\ProductPropertyQuery;
     use App\Model\ProductQuery;
-    use Propel\Runtime\Collection\ArrayCollection;
-    use Propel\Runtime\Collection\ObjectCollection;
-    use Propel\Runtime\Formatter\ObjectFormatter;
-    use Propel\Runtime\Propel;
 
     class ProductService
     {
@@ -31,8 +24,8 @@
                 ->where('ProductCategoryRel.product_category_id = '. $id)
                 ->groupBy('Product.id')
                 ->orderBy('product_rate')
-//                ->paginate(1, 3);
-                ->find();
+                ->paginate(1, 3);
+//                ->find();
         }
 
         public function getCategoriesList()
