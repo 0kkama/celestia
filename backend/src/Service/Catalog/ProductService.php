@@ -21,8 +21,9 @@
             $query =  ProductQuery::create()
                 ->leftJoin('ProductRating')
                 ->withColumn('avg(ProductRating.rate)', 'product_rate')
-                ->joinWithProductCategoryRel()
-                ->where('ProductCategoryRel.product_category_id = '. $id);
+                ->useProductCategoryRelQuery()
+                    ->filterByProductCategoryId($id)
+                ->endUse();
 
             if (isset($title)) {
                 $query->filterBySlug($title, Criteria::EQUAL);
@@ -31,17 +32,15 @@
             if (isset($brand)) {
                 $query->filterByBrandId($brand);
             }
-//
+
             if (isset($priceMin)) {
                 $query->where("Product.price BETWEEN $priceMin AND $priceMax");
             }
-//
+
             return $query
                 ->groupBy('Product.id')
                 ->orderBy('product_rate', Criteria::DESC)
-                    //                ->paginate($page, $limit)
-                    //                ->paginate(1, 3)
-                ->find();
+                ->paginate($page, $limit);
         }
 
         public function getCategoriesList()
@@ -56,6 +55,7 @@
         public function getBrandsListByCategoryId(int $id)
         {
             return ProductBrandQuery::create()
+                ->joinWithProduct()
                 ->useProductQuery()
                     ->joinWithProductCategoryRel()
                     ->where('ProductCategoryRel.product_category_id = '. $id)

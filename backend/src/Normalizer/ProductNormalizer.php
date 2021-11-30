@@ -17,7 +17,7 @@
             if ($this->hasGroup($context, self::GROUP_PAGE)) {
                 $category = ProductCategoryQuery::create()
                     ->useProductCategoryRelQuery()
-                    ->filterByProduct($object)
+                        ->filterByProduct($object)
                     ->endUse()
                     ->find();
 

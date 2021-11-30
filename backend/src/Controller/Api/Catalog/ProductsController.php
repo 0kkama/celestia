@@ -44,6 +44,7 @@
         {
             $itemsPerPageInTile = 9;
             $itemsPerPageInTable = 20;
+
             $checkerService->setDefaultParamsForFilters($handler);
 
             $handler->validate([
@@ -54,17 +55,19 @@
                 ]
             ]);
 
-            $page = $handler->getRequest()->query->get('page');
-            $limit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
-            $title = $handler->getRequest()->query->has('title') ? $handler->getRequest()->query->get('title') : null;
-            $minPrice = $handler->getRequest()->query->has('min_price') ? $handler->getRequest()->query->get('min_price') : null;
-            $maxPrice = $handler->getRequest()->query->has('max_price') ? $handler->getRequest()->query->get('max_price') : null;
-            $brand = $handler->getRequest()->query->has('brand') ? $handler->getRequest()->query->get('brand') : null;
+            $pageFilter = $handler->getRequest()->query->get('page');
+            $itemPerPageLimit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
+            $titleFilter = $handler->getRequest()->query->has('title') ? $handler->getRequest()->query->get('title') : null;
+            $minPriceFilter = $handler->getRequest()->query->has('min_price') ? $handler->getRequest()->query->get('min_price') : null;
+            $maxPriceFilter = $handler->getRequest()->query->has('max_price') ? $handler->getRequest()->query->get('max_price') : null;
+            $brandFilter = $handler->getRequest()->query->has('brand') ? $handler->getRequest()->query->get('brand') : null;
 
             $brands = $productService->getBrandsListByCategoryId($category);
             $handler->checkFound($brands);
 
-            $products = $productService->paginateProductsByCategoryId($category, $page, $limit, $brand, $title, $minPrice, $maxPrice);
+            dump($brands);
+
+            $products = $productService->paginateProductsByCategoryId($category, $pageFilter, $itemPerPageLimit, $brandFilter, $titleFilter, $minPriceFilter, $maxPriceFilter);
             $handler->checkFound($products);
 
             $data = ['products' => $products, 'brands' => $brands];
