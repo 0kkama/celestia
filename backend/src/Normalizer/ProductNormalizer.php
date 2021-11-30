@@ -11,12 +11,9 @@
     {
         public const GROUP_PAGE = 'product_page';
         public const GROUP_LIST = 'products_list';
-        public const GROUP_TEST = 'products_test';
 
         public function normalize($object, string $format = null, array $context = [])
         {
-
-
             if ($this->hasGroup($context, self::GROUP_PAGE)) {
                 $category = ProductCategoryQuery::create()
                     ->useProductCategoryRelQuery()
@@ -52,8 +49,8 @@
                     ->filterByProductId($object->getId())
                     ->find();
 
-//                $rating = $object->hasVirtualColumn('product_rate') ?
-//                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
+                $rating = $object->hasVirtualColumn('product_rate') ?
+                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
 
                 $data = [
                     'id'         => $object->getId(),
@@ -63,7 +60,7 @@
                     'brand'      => [
                         'title' => $object->getProductBrand()->getTitle(),
                     ],
-//                    'rating'     => $rating,
+                    'rating'     => $rating,
                     'properties' => $properties,
                     'url'        => $object->getSlug(),
                 ];

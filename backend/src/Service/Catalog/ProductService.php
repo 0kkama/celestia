@@ -7,6 +7,7 @@
     use App\Model\ProductCategoryQuery;
     use App\Model\ProductPropertyQuery;
     use App\Model\ProductQuery;
+    use Propel\Runtime\ActiveQuery\Criteria;
 
     class ProductService
     {
@@ -15,17 +16,32 @@
             return ProductQuery::create()->find();
         }
 
-        public function paginateProductsByCategoryId($id, $page, $limit)
+        public function paginateProductsByCategoryId(int $id, int $page, int $limit, $brand, $title, $priceMin, $priceMax)
         {
-            return ProductQuery::create()
+            $query =  ProductQuery::create()
                 ->leftJoin('ProductRating')
                 ->withColumn('avg(ProductRating.rate)', 'product_rate')
                 ->joinWithProductCategoryRel()
-                ->where('ProductCategoryRel.product_category_id = '. $id)
+                ->where('ProductCategoryRel.product_category_id = '. $id);
+
+            if (isset($title)) {
+                $query->filterBySlug($title, Criteria::EQUAL);
+            }
+
+            if (isset($brand)) {
+                $query->filterByBrandId($brand);
+            }
+//
+            if (isset($priceMin)) {
+                $query->where("Product.price BETWEEN $priceMin AND $priceMax");
+            }
+//
+            return $query
                 ->groupBy('Product.id')
-                ->orderBy('product_rate')
-                ->paginate(1, 3);
-//                ->find();
+                ->orderBy('product_rate', Criteria::DESC)
+                    //                ->paginate($page, $limit)
+                    //                ->paginate(1, 3)
+                ->find();
         }
 
         public function getCategoriesList()
@@ -37,12 +53,12 @@
                     ->find();
         }
 
-        public function getBrandsListByCategoryId($id)
+        public function getBrandsListByCategoryId(int $id)
         {
             return ProductBrandQuery::create()
                 ->useProductQuery()
                     ->joinWithProductCategoryRel()
-                    ->where('ProductCategoryRel.product_category_id = '. 1)
+                    ->where('ProductCategoryRel.product_category_id = '. $id)
                 ->endUse()
                 ->joinProduct()
                 ->groupBy('ProductBrand.id')

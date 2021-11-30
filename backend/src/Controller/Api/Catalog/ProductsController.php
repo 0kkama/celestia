@@ -5,20 +5,19 @@
     use App\Normalizer\ProductBrandNormalizer;
     use App\Normalizer\ProductCategoryNormalizer;
     use App\Normalizer\ProductNormalizer;
+    use App\Service\Catalog\ProductFiltersService;
     use App\Service\Catalog\ProductService;
     use App\Validator\Constraints\NotBlank;
     use Creonit\RestBundle\Annotation\Parameter\PathParameter;
     use Creonit\RestBundle\Annotation\Parameter\QueryParameter;
     use Creonit\RestBundle\Handler\RestHandler;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Annotation\Route;
     use Symfony\Component\Validator\Constraints\Choice;
     use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
     use Symfony\Component\Validator\Constraints\LessThanOrEqual;
     use Symfony\Component\Validator\Constraints\Positive;
-    use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 
     /**
@@ -36,54 +35,44 @@
          * @QueryParameter("page", description="указывает текущую страницу")
          * @QueryParameter("min_price", description="Устанаваливает минимальную цену товара для фильтрации")
          * @QueryParameter("max_price", description="Устанаваливает максимальную цену товара для фильтрации")
-         * @QueryParameter("title", description="Позволяет фильтровать товары по названию")
+         * @QueryParameter("title", description="Позволяет фильтровать товары по названию (url)")
          * @QueryParameter("brand", description="Позволяет фильтровать товары по бренду")
          *
          * @Route("/categories/{category}", name="by_category", methods={"GET"})
          */
-        public function getProductsByCategory(RestHandler $handler, ProductService $service, $category): Response
+        public function getProductsByCategory(RestHandler $handler, ProductService $productService, $category, ProductFiltersService $checkerService): Response
         {
-            if (!$handler->getRequest()->query->get('view')) {
-                $handler->getRequest()->query->set('view', 'table');
-            }
+            $itemsPerPageInTile = 9;
+            $itemsPerPageInTable = 20;
+            $checkerService->setDefaultParamsForFilters($handler);
 
-            if(!$handler->getRequest()->query->get('page')) {
-                $handler->getRequest()->query->set('page', 1);
-            }
-
-            //            фильтры: название, цена(от и до), бренд (выпадающий список на основе товаров в категории)
             $handler->validate([
                 'query' => [
                     'view' => [new NotBlank(), new Choice(['tile', 'table'])],
-                    'page' => [],
-                    'title' => [],
-//                    'min_price' => [new Positive(), new LessThanOrEqual($handler->getRequest()->query->get('max_price'))],
-//                    'max_price' => [new Positive(), new GreaterThanOrEqual($handler->getRequest()->query->get('min_price'))],
-                    'brand' => [],
+                    'min_price' => [new Positive(), new LessThanOrEqual($handler->getRequest()->query->get('max_price'))],
+                    'max_price' => [new Positive(), new GreaterThanOrEqual($handler->getRequest()->query->get('min_price'))],
                 ]
             ]);
 
-//            $page = $handler->getRequest()->query->get('page');
-//            $limit = ($handler->getRequest()->query->get('view') === 'table') ? 9 : 20;
-//
-//            $products = $service->paginateProductsByCategoryId($category, $page, $limit);
-            $products = $service->paginateProductsByCategoryId($category, 1, 3);
-            $handler->checkFound($products);
+            $page = $handler->getRequest()->query->get('page');
+            $limit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
+            $title = $handler->getRequest()->query->has('title') ? $handler->getRequest()->query->get('title') : null;
+            $minPrice = $handler->getRequest()->query->has('min_price') ? $handler->getRequest()->query->get('min_price') : null;
+            $maxPrice = $handler->getRequest()->query->has('max_price') ? $handler->getRequest()->query->get('max_price') : null;
+            $brand = $handler->getRequest()->query->has('brand') ? $handler->getRequest()->query->get('brand') : null;
 
-            $brands = $service->getBrandsListByCategoryId($category);
+            $brands = $productService->getBrandsListByCategoryId($category);
             $handler->checkFound($brands);
 
-            //            dump($products);
-                        dump($brands);
+            $products = $productService->paginateProductsByCategoryId($category, $page, $limit, $brand, $title, $minPrice, $maxPrice);
+            $handler->checkFound($products);
 
-            $data = ['products' => $products, 'brand_list' => $brands];
-//
+            $data = ['products' => $products, 'brands' => $brands];
+
             $handler->data->addGroup(ProductNormalizer::GROUP_LIST);
             $handler->data->addGroup(ProductBrandNormalizer::GROUP_LIST);
             $handler->data->set($data);
 
-//            $data = [1 => '1' , 2 => '2'];
-//            return $this->json($data);
             return $handler->response();
         }
 
@@ -99,10 +88,8 @@
             $product = $service->getProductById($id);
 
             $handler->checkFound($product);
-
             $handler->data->addGroup(ProductNormalizer::GROUP_PAGE);
             $handler->data->addGroup(ProductCategoryNormalizer::GROUP_PRODUCT);
-
             $handler->data->set($product);
 
             return $handler->response();
@@ -116,9 +103,6 @@
         public function getCategoriesList(RestHandler $handler, ProductService $service): Response
         {
             $categories = $service->getCategoriesList();
-
-//            dump($categories);
-
             $handler->checkFound($categories);
             $handler->data->addGroup(ProductCategoryNormalizer::GROUP_LIST);
             $handler->data->set($categories);

@@ -3,11 +3,6 @@
     namespace App\Normalizer;
 
     use App\Model\ProductBrand;
-    use App\Normalizer\AbstractNormalizer;
-    use Symfony\Component\Serializer\Exception\CircularReferenceException;
-    use Symfony\Component\Serializer\Exception\ExceptionInterface;
-    use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-    use Symfony\Component\Serializer\Exception\LogicException;
 
     class ProductBrandNormalizer extends AbstractNormalizer
     {
