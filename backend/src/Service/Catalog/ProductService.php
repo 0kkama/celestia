@@ -7,6 +7,8 @@
     use App\Model\ProductCategoryQuery;
     use App\Model\ProductPropertyQuery;
     use App\Model\ProductQuery;
+    use App\Model\ProductRating;
+    use App\Model\ProductRatingQuery;
     use Propel\Runtime\ActiveQuery\Criteria;
 
     class ProductService
@@ -91,5 +93,22 @@
             return ProductPropertyQuery::create()
                 ->filterByProduct($product)
                 ->find();
+        }
+
+        public function hadUserAlreadyVoted($productId, $userId): bool
+        {
+            $result = ProductRatingQuery::create()
+                ->filterByProductId($productId)
+                ->filterByUserId($userId)
+                ->findOne();
+
+            return !(null === $result);
+        }
+
+        public function takeVote($productId, $userId, $rating)
+        {
+            $voteRow = new ProductRating();
+            $voteRow->setProductId($productId)->setUserId($userId)->setRate($rating)->save();
+            return true;
         }
     }

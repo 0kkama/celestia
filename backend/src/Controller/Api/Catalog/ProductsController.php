@@ -10,6 +10,7 @@
     use App\Validator\Constraints\NotBlank;
     use Creonit\RestBundle\Annotation\Parameter\PathParameter;
     use Creonit\RestBundle\Annotation\Parameter\QueryParameter;
+    use Creonit\RestBundle\Annotation\Parameter\RequestParameter;
     use Creonit\RestBundle\Handler\RestHandler;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@
     use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
     use Symfony\Component\Validator\Constraints\LessThanOrEqual;
     use Symfony\Component\Validator\Constraints\Positive;
+    use Symfony\Component\Validator\Constraints\Range;
 
     /**
      * @Route("/products", name="product_")
@@ -89,6 +91,41 @@
 
             return $handler->response();
         }
+
+
+        /**
+         * Дать оценку продукту
+         *
+         * @RequestParameter("rating", type="integer", description="Оценка продукта пользователем")
+         *
+         * @Route("/product/{id}", name="vote_for_product", methods={"POST"}, requirements={"id"="[1-9]{1}\d*"})
+         */
+        public function voteForProduct(RestHandler $handler, ProductService $service, $id): Response
+        {
+            $handler->checkAuthorization();
+
+            $user = $this->getUser();
+
+            $productId = 27;
+            $userId = 1;
+
+            $handler->validate([
+                'request' => [
+                    'rating' => [new NotBlank(), new Range(['min' => 1, 'max' => 5])],
+                ]
+            ]);
+
+            $rating = $handler->getRequest()->get('rating');
+
+            if ($service->hadUserAlreadyVoted($productId, $userId)) {
+                $handler->error->set('request/rating', 'Вы уже голосовали за данный товар');
+                return $handler->response();
+            }
+
+            $service->takeVote($id, $userId, $rating);
+            return $handler->response();
+        }
+
 
         /**
          * Получить список категорий продуктов
