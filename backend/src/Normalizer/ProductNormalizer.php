@@ -4,7 +4,6 @@
 
     use App\Model\Product;
     use App\Model\ProductCategoryQuery;
-    use App\Model\ProductCategoryRelQuery;
     use App\Model\ProductPropertyQuery;
 
     class ProductNormalizer extends AbstractNormalizer
@@ -68,7 +67,6 @@
 
             return $this->serializer->normalize($data, $format, $context);
         }
-
 
         public function supportsNormalization($data, string $format = null)
         {

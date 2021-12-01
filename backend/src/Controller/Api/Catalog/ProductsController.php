@@ -19,20 +19,17 @@
     use Symfony\Component\Validator\Constraints\LessThanOrEqual;
     use Symfony\Component\Validator\Constraints\Positive;
 
-
     /**
      * @Route("/products", name="product_")
      */
     class ProductsController extends AbstractController
     {
-
         /**
          * Получить список продуктов по категории
          *
-         * @PathParameter("category", type="string", description="Название категории")
-         *
+         * @PathParameter("category", type="string", description="ID категории")
          * @QueryParameter("view", description="Определяет количество выводимых элементов")
-         * @QueryParameter("page", description="указывает текущую страницу")
+         * @QueryParameter("page", description="Указывает текущую страницу")
          * @QueryParameter("min_price", description="Устанаваливает минимальную цену товара для фильтрации")
          * @QueryParameter("max_price", description="Устанаваливает максимальную цену товара для фильтрации")
          * @QueryParameter("title", description="Позволяет фильтровать товары по названию (url)")
@@ -40,12 +37,9 @@
          *
          * @Route("/categories/{category}", name="by_category", methods={"GET"})
          */
-        public function getProductsByCategory(RestHandler $handler, ProductService $productService, $category, ProductFiltersService $checkerService): Response
+        public function getProductsByCategory(RestHandler $handler, ProductService $productService, $category, ProductFiltersService $filtersService): Response
         {
-            $itemsPerPageInTile = 9;
-            $itemsPerPageInTable = 20;
-
-            $checkerService->setDefaultParamsForFilters($handler);
+            $filtersService->setDefaultParamsForFilters($handler);
 
             $handler->validate([
                 'query' => [
@@ -55,19 +49,17 @@
                 ]
             ]);
 
-            $pageFilter = $handler->getRequest()->query->get('page');
-            $itemPerPageLimit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
-            $titleFilter = $handler->getRequest()->query->has('title') ? $handler->getRequest()->query->get('title') : null;
-            $minPriceFilter = $handler->getRequest()->query->has('min_price') ? $handler->getRequest()->query->get('min_price') : null;
-            $maxPriceFilter = $handler->getRequest()->query->has('max_price') ? $handler->getRequest()->query->get('max_price') : null;
-            $brandFilter = $handler->getRequest()->query->has('brand') ? $handler->getRequest()->query->get('brand') : null;
+            $itemsPerPageInTile = 9;
+            $itemsPerPageInTable = 20;
+
+            $page = $handler->getRequest()->query->get('page');
+            $itemsLimit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
+            $filters = $filtersService->getFiltersCollection($handler);
 
             $brands = $productService->getBrandsListByCategoryId($category);
             $handler->checkFound($brands);
 
-            dump($brands);
-
-            $products = $productService->paginateProductsByCategoryId($category, $pageFilter, $itemPerPageLimit, $brandFilter, $titleFilter, $minPriceFilter, $maxPriceFilter);
+            $products = $productService->paginateProductsByCategoryId($category, $page, $itemsLimit, $filters);
             $handler->checkFound($products);
 
             $data = ['products' => $products, 'brands' => $brands];

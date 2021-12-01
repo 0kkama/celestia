@@ -16,7 +16,7 @@
             return ProductQuery::create()->find();
         }
 
-        public function paginateProductsByCategoryId(int $id, int $page, int $limit, $brand, $title, $priceMin, $priceMax)
+        public function paginateProductsByCategoryId(int $id, int $page, int $limit, array $filters)
         {
             $query =  ProductQuery::create()
                 ->leftJoin('ProductRating')
@@ -25,19 +25,16 @@
                     ->filterByProductCategoryId($id)
                 ->endUse();
 
-            if (isset($title)) {
-                $query->filterBySlug($title, Criteria::EQUAL);
+            if (isset($filters['productTitle'])) {
+                $query->filterBySlug($filters['productTitle'], Criteria::EQUAL);
             }
 
-            if (isset($brand)) {
-                $query->filterByBrandId($brand);
-            }
-
-            if (isset($priceMin)) {
-                $query->where("Product.price BETWEEN $priceMin AND $priceMax");
+            if (isset($filters['brand'])) {
+                $query->filterByBrandId($filters['brand']);
             }
 
             return $query
+                ->where("Product.price BETWEEN {$filters['minPrice']} AND {$filters['maxPrice']}")
                 ->groupBy('Product.id')
                 ->orderBy('product_rate', Criteria::DESC)
                 ->paginate($page, $limit);
