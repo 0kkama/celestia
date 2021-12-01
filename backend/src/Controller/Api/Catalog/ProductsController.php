@@ -92,7 +92,6 @@
             return $handler->response();
         }
 
-
         /**
          * Дать оценку продукту
          *
@@ -102,13 +101,6 @@
          */
         public function voteForProduct(RestHandler $handler, ProductService $service, $id): Response
         {
-            $handler->checkAuthorization();
-
-            $user = $this->getUser();
-
-            $productId = 27;
-            $userId = 1;
-
             $handler->validate([
                 'request' => [
                     'rating' => [new NotBlank(), new Range(['min' => 1, 'max' => 5])],
@@ -117,15 +109,13 @@
 
             $rating = $handler->getRequest()->get('rating');
 
-            if ($service->hadUserAlreadyVoted($productId, $userId)) {
-                $handler->error->set('request/rating', 'Вы уже голосовали за данный товар');
-                return $handler->response();
+            if (!$service->isProductExist($id)) {
+                $handler->error->send('Продукт не существует!', 404, 404);
             }
 
-            $service->takeVote($id, $userId, $rating);
-            return $handler->response();
+            $service->takeVote($id, $rating);
+            return $handler->response('Ваша оценка засчитана!');
         }
-
 
         /**
          * Получить список категорий продуктов

@@ -98,20 +98,17 @@
                 ->find();
         }
 
-        public function hadUserAlreadyVoted($productId, $userId): bool
+        public function isProductExist(int $id)
         {
-            $result = ProductRatingQuery::create()
-                ->filterByProductId($productId)
-                ->filterByUserId($userId)
-                ->findOne();
-
-            return !(null === $result);
+            $result = ProductQuery::create()
+                ->findOneById($id);
+            return !is_null($result);
         }
 
-        public function takeVote($productId, $userId, $rating)
+        public function takeVote($productId, $rating)
         {
             $voteRow = new ProductRating();
-            $voteRow->setProductId($productId)->setUserId($userId)->setRate($rating)->save();
+            $voteRow->setProductId($productId)->setRate($rating)->save();
             return true;
         }
     }
