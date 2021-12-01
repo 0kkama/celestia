@@ -18,6 +18,14 @@
             return ProductQuery::create()->find();
         }
 
+        public function getProductById(int $id): Product
+        {
+            return ProductQuery::create()
+                ->leftJoin('ProductRating')
+                ->withColumn('avg(ProductRating.rate)', 'product_rate')
+                ->findOneById($id);
+        }
+
         public function paginateProductsByCategoryId(int $id, int $page, int $limit, array $filters)
         {
             $query =  ProductQuery::create()
@@ -62,11 +70,6 @@
                 ->joinProduct()
                 ->groupBy('ProductBrand.id')
                 ->find();
-        }
-
-        public function getProductById($id): Product
-        {
-            return ProductQuery::create()->findOneById($id);
         }
 
         public function getProductBySlug($slug): Product

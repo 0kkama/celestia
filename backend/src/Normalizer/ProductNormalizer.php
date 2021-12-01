@@ -24,6 +24,9 @@
                     ->filterByProduct($object)
                     ->find();
 
+                $rating = $object->hasVirtualColumn('product_rate') ?
+                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
+
                 $data = [
                     'id' => $object->getId(),
                     'title' => $object->getTitle(),
@@ -33,7 +36,7 @@
                     ],
                     'price' => $object->getPrice(),
                     'content' => $object->getContent(),
-                    'rating' => $object->getRating(),
+                    'rating' => $rating,
                     'category' => $category,
                     'properties' => $properties,
                     'gallery' => $object->getGallery(),
