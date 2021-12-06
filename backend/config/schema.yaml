@@ -52,19 +52,18 @@ database:
 
     product_brand:
         title: text
+        slug: text
         +behavior:
             - image
 
     product:
         brand_id: int > product_brand.id
         price: decimal(9,2)
-        rating: tinyint = 0
         article_number: text
         title: text
         slug: text
         content: text
         description: text
-        properties: text
         keywords: text
         visible: bool = 1
         +behavior:
@@ -94,6 +93,7 @@ database:
         product_id: int > product.id
         title: text
         value: text
+        type: tinyint = 1
 
 
 
