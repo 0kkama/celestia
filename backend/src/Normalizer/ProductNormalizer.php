@@ -8,64 +8,49 @@
 
     class ProductNormalizer extends AbstractNormalizer
     {
-        public const GROUP_PAGE = 'product_page';
-        public const GROUP_LIST = 'products_list';
+        public const GROUP_PAGE = 'products_one_product_page';
+        public const GROUP_LIST = 'products_list_of_products';
 
         public function normalize($object, string $format = null, array $context = [])
         {
+            $rating = $object->hasVirtualColumn('product_rate') ?
+                round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
+
+            $category = ProductCategoryQuery::create()
+                ->useProductCategoryRelQuery()
+                ->filterByProduct($object)
+                ->endUse()
+                ->find();
+
+            $properties = ProductPropertyQuery::create()
+                ->filterByProductId($object->getId());
+
+            $data = [
+                'id' => $object->getId(),
+                'title' => $object->getTitle(),
+                'brand' => $object->getProductBrand(),
+                'price' => $object->getPrice(),
+                'content' => $object->getContent(),
+                'rating' => $rating,
+                'category' => $category,
+            ];
+
             if ($this->hasGroup($context, self::GROUP_PAGE)) {
-                $category = ProductCategoryQuery::create()
-                    ->useProductCategoryRelQuery()
-                        ->filterByProduct($object)
-                    ->endUse()
-                    ->find();
+//            $properties = $properties->where('ProductProperty.type = 1 OR ProductProperty.type = 3')->find();
+                $properties = $properties->find();
 
-                $properties = ProductPropertyQuery::create()
-                    ->filterByProduct($object)
-                    ->find();
-
-                $rating = $object->hasVirtualColumn('product_rate') ?
-                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
-
-                $data = [
-                    'id' => $object->getId(),
-                    'title' => $object->getTitle(),
-                    'brand' => [
-                        'title' => $object->getProductBrand()->getTitle(),
-                        'brand_image' => $object->getProductBrand()->getImage(),
-                    ],
-                    'price' => $object->getPrice(),
-                    'content' => $object->getContent(),
-                    'rating' => $rating,
-                    'category' => $category,
-                    'properties' => $properties,
-                    'gallery' => $object->getGallery(),
-                    'visible' => $object->getVisible(),
-                    'url' => $object->getSlug(),
-                ];
+                    $data['properties'] = $properties;
+                    $data['gallery'] = $object->getGallery();
+                    $data['visible'] = $object->getVisible();
+                    $data['url'] = $object->getSlug();
             }
 
             if ($this->hasGroup($context, self::GROUP_LIST)) {
+//                $properties = $properties->where('ProductProperty.type = 0 OR ProductProperty.type = 3')->find();
+                $properties = $properties->find();
 
-                $properties = ProductPropertyQuery::create()
-                    ->filterByProductId($object->getId())
-                    ->find();
-
-                $rating = $object->hasVirtualColumn('product_rate') ?
-                    round($object->getVirtualColumn('product_rate'), 0, PHP_ROUND_HALF_UP) : 0;
-
-                $data = [
-                    'id'         => $object->getId(),
-                    'title'      => $object->getTitle(),
-                    'image'      => $object->getImage(),
-                    'price'      => $object->getPrice(),
-                    'brand'      => [
-                        'title' => $object->getProductBrand()->getTitle(),
-                    ],
-                    'rating'     => $rating,
-                    'properties' => $properties,
-                    'url'        => $object->getSlug(),
-                ];
+                    $data['properties'] = $properties;
+                    $data['url']        = $object->getSlug();
             }
 
             return $this->serializer->normalize($data, $format, $context);

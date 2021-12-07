@@ -6,38 +6,28 @@
 
     class ProductCategoryNormalizer extends AbstractNormalizer
     {
-        public const GROUP_LIST = 'categories_list';
-        public const GROUP_ONE = 'one_category';
-        public const GROUP_PRODUCT = 'product_category';
+        public const GROUP_LIST = 'product_category_list_of_product_categories';
+        public const GROUP_ONE = 'product_category_data_for_one_category';
+        public const GROUP_PRODUCT = 'product_category_data_for_product_card';
 
         public function normalize($object, string $format = null, array $context = [])
         {
+            $data = [
+                'id' => $object->getId(),
+                'title' => $object->getTitle(),
+                'slug' => $object->getSlug(),
+            ];
+
+            if ($this->hasGroup($context, self::GROUP_LIST) || $this->hasGroup($context, self::GROUP_ONE)) {
+                $data['products_amount'] = $object->getVirtualColumn('amount');
+            }
+
             if ($this->hasGroup($context, self::GROUP_LIST)) {
-                $data = [
-                    'id' => $object->getId(),
-                    'title' => $object->getTitle(),
-                    'slug' => $object->getSlug(),
-                    'products_amount' => $object->getVirtualColumn('amount'),
-                    'image' => $object->getImage(),
-                ];
+                $data['image'] = $object->getImage();
             }
 
             if ($this->hasGroup($context, self::GROUP_ONE)) {
-                $data = [
-                    'id' => $object->getId(),
-                    'title' => $object->getTitle(),
-                    'content' => $object->getContent(),
-                    'slug' => $object->getSlug(),
-                    'products_amount' => $object->getProductsAmount(),
-                ];
-            }
-
-            if ($this->hasGroup($context, self::GROUP_PRODUCT)) {
-                $data = [
-                    'id' => $object->getId(),
-                    'title' => $object->getTitle(),
-                    'slug' => $object->getSlug(),
-                ];
+                $data['content'] = $object->getContent();
             }
 
             return $this->serializer->normalize($data, $format, $context);
