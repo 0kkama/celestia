@@ -2,6 +2,7 @@
 
     namespace App\Controller\Api\Catalog;
 
+    use App\Helper\ProductParametersProvider;
     use App\Normalizer\ProductBrandNormalizer;
     use App\Normalizer\ProductCategoryNormalizer;
     use App\Normalizer\ProductNormalizer;
@@ -27,6 +28,43 @@
     class ProductsController extends AbstractController
     {
         /**
+         * Получить список категорий продуктов
+         *
+         * @Route("/categories", name="categories_list", methods={"GET"})
+         */
+        public function getCategoriesList(RestHandler $handler, ProductService $productService): Response
+        {
+            $categories = $productService->getCategoriesList();
+
+            $handler->data->addGroup(ProductCategoryNormalizer::GROUP_LIST);
+            $handler->data->set($categories);
+            return $handler->response();
+        }
+
+        /**
+         * Получить информацию о продукте по URL
+         *
+         * @PathParameter("url", type="string", description="Slug товара или его ID")
+         *
+         * @Route("/product/{url}", name="product_by_url", methods={"GET"})
+         */
+        public function getProduct(RestHandler $handler, ProductService $productService, $url): Response
+        {
+            $product = $productService->getProductByUrl($url);
+
+            if (empty($product->getId())) {
+                $product = $productService->getProductById($url);
+            }
+
+            $handler->checkFound($product);
+            $handler->data->addGroup(ProductNormalizer::GROUP_PAGE);
+            $handler->data->addGroup(ProductCategoryNormalizer::GROUP_PRODUCT);
+            $handler->data->set($product);
+
+            return $handler->response();
+        }
+
+        /**
          * Получить список продуктов по категории
          *
          * @PathParameter("category", type="string", description="ID категории")
@@ -39,9 +77,9 @@
          *
          * @Route("/categories/{category}", name="by_category", methods={"GET"})
          */
-        public function getProductsByCategory(RestHandler $handler, ProductService $productService, $category, ProductFiltersService $filtersService): Response
+        public function getProductsByCategory(RestHandler $handler, ProductService $productService, $category, ProductParametersProvider $parametersProvider): Response
         {
-            $filtersService->setDefaultParamsForFilters($handler);
+            $parametersProvider->setDefaultParamsForFilters($handler->getRequest());
 
             $handler->validate([
                 'query' => [
@@ -51,43 +89,27 @@
                 ]
             ]);
 
-            $itemsPerPageInTile = 9;
-            $itemsPerPageInTable = 20;
-
             $page = $handler->getRequest()->query->get('page');
-            $itemsLimit = ($handler->getRequest()->query->get('view') === 'tile') ? $itemsPerPageInTile : $itemsPerPageInTable;
-            $filters = $filtersService->getFiltersCollection($handler);
+            $filters = $parametersProvider->getFiltersCollection($handler->getRequest());
 
-            $brands = $productService->getBrandsListByCategoryId($category);
-            $handler->checkFound($brands);
-
-            $products = $productService->paginateProductsByCategoryId($category, $page, $itemsLimit, $filters);
-            $handler->checkFound($products);
-
-            $data = ['products' => $products, 'brands' => $brands];
-
+            $products = $productService->paginateProductsByCategoryId($category, $filters);
             $handler->data->addGroup(ProductNormalizer::GROUP_LIST);
-            $handler->data->addGroup(ProductBrandNormalizer::GROUP_LIST);
-            $handler->data->set($data);
+            $handler->data->set($products);
 
             return $handler->response();
         }
 
         /**
-         * Получить информацию о продукте по ID
+         * Получить список брендов по категории
          *
-         * @PathParameter("id", type="string", description="Идентификатор товара")
+         * @PathParameter("category", type="string", description="Идентификатор категории")
          *
-         * @Route("/product/{id}", name="product_by_id", methods={"GET"}, requirements={"id"="[1-9]{1}\d*"})
+         * @Route("/categories/{category}/brands", name="by_category", methods={"GET"})
          */
-        public function getProductById(RestHandler $handler, ProductService $service, $id): Response
+        public function getProductBrandsByCategory(RestHandler $handler, ProductService $productService, $category)
         {
-            $product = $service->getProductById($id);
-
-            $handler->checkFound($product);
-            $handler->data->addGroup(ProductNormalizer::GROUP_PAGE);
-            $handler->data->addGroup(ProductCategoryNormalizer::GROUP_PRODUCT);
-            $handler->data->set($product);
+            $brands = $productService->getBrandsListByCategory($category);
+            $handler->data->set($brands);
 
             return $handler->response();
         }
@@ -99,7 +121,7 @@
          *
          * @Route("/product/{id}", name="vote_for_product", methods={"POST"}, requirements={"id"="[1-9]{1}\d*"})
          */
-        public function voteForProduct(RestHandler $handler, ProductService $service, $id): Response
+        public function voteForProduct(RestHandler $handler, ProductService $productService, $id): Response
         {
             $handler->validate([
                 'request' => [
@@ -109,25 +131,11 @@
 
             $rating = $handler->getRequest()->get('rating');
 
-            if (!$service->isProductExist($id)) {
+            if (!$productService->isProductExist($id)) {
                 $handler->error->send('Продукт не существует!', 404, 404);
             }
 
-            $service->takeVote($id, $rating);
+            $productService->takeVote($id, $rating);
             return $handler->response('Ваша оценка засчитана!');
-        }
-
-        /**
-         * Получить список категорий продуктов
-         *
-         * @Route("/categories", name="categories_list", methods={"GET"})
-         */
-        public function getCategoriesList(RestHandler $handler, ProductService $service): Response
-        {
-            $categories = $service->getCategoriesList();
-            $handler->checkFound($categories);
-            $handler->data->addGroup(ProductCategoryNormalizer::GROUP_LIST);
-            $handler->data->set($categories);
-            return $handler->response();
         }
     }

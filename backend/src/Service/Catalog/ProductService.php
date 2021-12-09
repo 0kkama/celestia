@@ -2,52 +2,53 @@
 
     namespace App\Service\Catalog;
 
+    use App\Helper\ProductParametersDTO;
     use App\Model\Product;
     use App\Model\ProductBrandQuery;
     use App\Model\ProductCategoryQuery;
     use App\Model\ProductPropertyQuery;
     use App\Model\ProductQuery;
     use App\Model\ProductRating;
-    use App\Model\ProductRatingQuery;
     use Propel\Runtime\ActiveQuery\Criteria;
+    use Propel\Runtime\Collection\ObjectCollection;
 
     class ProductService
     {
-        public function getAllProducts()
+        public function getAllProducts(): ObjectCollection
         {
             return ProductQuery::create()->find();
         }
 
-        public function getProductById(int $id): Product
+        public function getProductByUrl(string $url): Product
         {
-            return ProductQuery::create()
-                ->leftJoin('ProductRating')
-                ->withColumn('avg(ProductRating.rate)', 'product_rate')
-                ->findOneById($id);
+            return $this->getProductQuery()->findOneBySlug($url);
         }
 
-        public function paginateProductsByCategoryId(int $id, int $page, int $limit, array $filters)
+        public function getProductById(int $id): Product
         {
-            $query =  ProductQuery::create()
-                ->leftJoin('ProductRating')
-                ->withColumn('avg(ProductRating.rate)', 'product_rate')
+            return $this->getProductQuery()->findPk($id);
+        }
+
+        public function paginateProductsByCategoryId(int $id, ProductParametersDTO $productParameters)
+        {
+            $query = $this->getProductQuery()
                 ->useProductCategoryRelQuery()
                     ->filterByProductCategoryId($id)
                 ->endUse();
 
-            if (isset($filters['productTitle'])) {
-                $query->filterBySlug($filters['productTitle'], Criteria::EQUAL);
+            if ($productParameters->isTitle()) {
+                $query->filterBySlug($productParameters->getProductTitle(), Criteria::EQUAL);
             }
 
-            if (isset($filters['brand'])) {
-                $query->filterByBrandId($filters['brand']);
+            if ($productParameters->isBrand()) {
+                $query->filterByBrandId($productParameters->getBrand(), Criteria::EQUAL);
             }
 
             return $query
-                ->where("Product.price BETWEEN {$filters['minPrice']} AND {$filters['maxPrice']}")
+                ->where("Product.price BETWEEN {$productParameters->getMinPrice()} AND {$productParameters->getMaxPrice()}")
                 ->groupBy('Product.id')
                 ->orderBy('product_rate', Criteria::DESC)
-                ->paginate($page, $limit);
+                ->paginate($productParameters->getPage(), $productParameters->getItemsPerPage());
         }
 
         public function getCategoriesList()
@@ -59,15 +60,23 @@
                     ->find();
         }
 
-        public function getBrandsListByCategoryId(int $id)
+        public function getCategoryByUrl(string $slug)
+        {
+            return ProductCategoryQuery::create()
+                ->findBySlug($slug);
+        }
+
+        public function getBrandsListByCategory(string $slug)
         {
             return ProductBrandQuery::create()
-                ->joinWithProduct()
+                ->leftJoinWithProduct()
                 ->useProductQuery()
-                    ->joinWithProductCategoryRel()
-                    ->where('ProductCategoryRel.product_category_id = '. $id)
+                    ->leftJoinWithProductCategoryRel()
+                    ->useProductCategoryRelQuery()
+                        ->leftJoinWithProductCategory()
+                        ->where("ProductCategory.slug =  '$slug'")
+                    ->endUse()
                 ->endUse()
-                ->joinProduct()
                 ->groupBy('ProductBrand.id')
                 ->find();
         }
@@ -86,8 +95,8 @@
         {
             return ProductCategoryQuery::create()
                 ->useProductCategoryRelQuery()
-                ->filterByProduct($product)
-                    ->endUse()
+                    ->filterByProduct($product)
+                ->endUse()
                 ->find();
         }
 
@@ -101,14 +110,21 @@
         public function isProductExist(int $id)
         {
             $result = ProductQuery::create()
-                ->findOneById($id);
+                ->findPk($id);
             return !is_null($result);
         }
 
-        public function takeVote($productId, $rating)
+        public function takeVote($productId, $rating): bool
         {
             $voteRow = new ProductRating();
             $voteRow->setProductId($productId)->setRate($rating)->save();
             return true;
+        }
+
+        protected function getProductQuery()
+        {
+            return ProductQuery::create()
+                ->leftJoin('ProductRating')
+                ->withColumn('avg(ProductRating.rate)', 'product_rate');
         }
     }
