@@ -52,11 +52,11 @@
         {
             $product = $productService->getProductByUrl($url);
 
-            if (empty($product->getId())) {
+            if (is_numeric($url) && empty($product->getId())) {
                 $product = $productService->getProductById($url);
             }
 
-            $handler->checkFound($product);
+            $handler->checkFound($product->getId());
             $handler->data->addGroup(ProductNormalizer::GROUP_PAGE);
             $handler->data->addGroup(ProductCategoryNormalizer::GROUP_PRODUCT);
             $handler->data->set($product);
@@ -117,11 +117,12 @@
         /**
          * Дать оценку продукту
          *
+         * @PathParameter("product", type="string", description="URL продукта")
          * @RequestParameter("rating", type="integer", description="Оценка продукта пользователем")
          *
-         * @Route("/product/{id}", name="vote_for_product", methods={"POST"}, requirements={"id"="[1-9]{1}\d*"})
+         * @Route("/product/{url}/vote", name="vote_for_product", methods={"POST"}, requirements={"id"="[1-9]{1}\d*"})
          */
-        public function voteForProduct(RestHandler $handler, ProductService $productService, $id): Response
+        public function voteForProduct(RestHandler $handler, ProductService $productService, $url): Response
         {
             $handler->validate([
                 'request' => [
@@ -131,11 +132,11 @@
 
             $rating = $handler->getRequest()->get('rating');
 
-            if (!$productService->isProductExist($id)) {
+            if (is_null($product = $productService->getProductByUrl($url))) {
                 $handler->error->send('Продукт не существует!', 404, 404);
             }
 
-            $productService->takeVote($id, $rating);
+            $productService->takeVote($product, $rating);
             return $handler->response('Ваша оценка засчитана!');
         }
     }

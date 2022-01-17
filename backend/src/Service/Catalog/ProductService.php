@@ -81,11 +81,6 @@
                 ->find();
         }
 
-        public function getProductBySlug($slug): Product
-        {
-            return ProductQuery::create()->findOneBySlug($slug);
-        }
-
         public function getProductByName(string $name): Product
         {
             return ProductQuery::create()->findOneByTitle($name);
@@ -107,17 +102,16 @@
                 ->find();
         }
 
-        public function isProductExist(int $id)
+        public function getProductByPk(int $id)
         {
-            $result = ProductQuery::create()
+            return ProductQuery::create()
                 ->findPk($id);
-            return !is_null($result);
         }
 
-        public function takeVote($productId, $rating): bool
+        public function takeVote(Product $product, $rating): bool
         {
             $voteRow = new ProductRating();
-            $voteRow->setProductId($productId)->setRate($rating)->save();
+            $voteRow->setProductId($product->getId())->setRate($rating)->save();
             return true;
         }
 
