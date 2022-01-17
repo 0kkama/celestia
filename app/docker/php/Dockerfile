@@ -33,3 +33,8 @@ RUN  curl -sS https://get.symfony.com/cli/installer | bash \
     && mv /root/.symfony/bin/symfony /usr/local/bin/symfony \
     && mkdir /.symfony/ \
     && chmod 777 /.symfony/
+
+# Install xdebug
+#RUN apt-get install -y php-xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
