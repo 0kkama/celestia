@@ -1,4 +1,4 @@
-# App
+# Стажировочный проект для Creonit
 
 ### Первоначальная установка
 
@@ -62,3 +62,12 @@
   
 - Выполняем запросы миграции:
   `docker-compose exec backend bin/console propel:migration:migrate`
+  
+- Для корректной работы админки может потребоваться установка ассетов:
+ `docker-compose exec backend bin/console assets:install`
+ 
+ Админка: 
+ http://127.0.0.1/admin
+ 
+ Swagger OpenAPI:
+ http://127.0.0.1/openapi/#/
